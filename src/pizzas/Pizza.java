@@ -2,13 +2,15 @@ package pizzas;
 import java.util.List;
 
 import main.Sabor;
+import main.Pedido;
 
-public abstract class Pizza {
+public abstract class Pizza extends Pedido {
 	protected List<Sabor> sabores;
 	
 	// Construtor
 	
-	public Pizza(List<Sabor> sabores) {
+	public Pizza(List<Sabor> sabores,int  id_mesa) {
+		super(id_mesa);
 		this.sabores = sabores;
 	}
 	

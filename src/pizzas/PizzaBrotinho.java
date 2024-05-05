@@ -9,8 +9,8 @@ public class PizzaBrotinho extends Pizza {
 
 	// Construtor
 
-	public PizzaBrotinho(List<Sabor> sabores) {
-		super(new ArrayList<>(1));
+	public PizzaBrotinho(List<Sabor> sabores, int id_mesa) {
+		super(new ArrayList<>(1), id_mesa);
 	}
 	
 	// Métodos
