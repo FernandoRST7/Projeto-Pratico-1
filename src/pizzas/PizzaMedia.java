@@ -9,8 +9,8 @@ public class PizzaMedia extends Pizza {
 
 	// Construtor
 	
-	public PizzaMedia(List<Sabor> sabores) {
-		super(new ArrayList<>(2));
+	public PizzaMedia(List<Sabor> sabores, int id_mesa) {
+		super(new ArrayList<>(2), id_mesa);
 	}
 	
 	// Métodos
