@@ -1,33 +1,33 @@
 package pizzas;
-import java.util.List;
+import java.util.ArrayList;
 
 import main.Sabor;
 import main.Pedido;
 
 public abstract class Pizza extends Pedido {
-	protected List<Sabor> sabores;
+	protected ArrayList<Sabor> sabores;
 	
 	// Construtor
 	
-	public Pizza(List<Sabor> sabores,int  id_mesa) {
+	public Pizza(int id_mesa) {
 		super(id_mesa);
-		this.sabores = sabores;
+		sabores = new ArrayList<Sabor>();
 	}
 	
-	// Getters e Setters
+	// Getters
 	
-	public List<Sabor> getSabores() {
+	public ArrayList<Sabor> getSabores() {
 		return sabores;
 	}
 	
-	public void setSabores(List<Sabor> sabores) {
-		this.sabores = sabores;
-	}
+	//acho que nao precisa de setter de sabores
 	
 	// Métodos
 	
 	public void adicionarSabores(Sabor sabor) {
-		this.sabores.add(sabor);
+		if (!sabores.contains(sabor)) {
+			this.sabores.add(sabor);
+		}
 	}
 	
 	public void removerSabores(Sabor sabor) {
