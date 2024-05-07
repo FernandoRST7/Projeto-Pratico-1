@@ -1,16 +1,16 @@
 package pizzas;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
-import main.Sabor;
+//import main.Sabor;
 
 public class PizzaBrotinho extends Pizza {
 
 	// Construtor
 
-	public PizzaBrotinho(List<Sabor> sabores, int id_mesa) {
-		super(new ArrayList<>(1), id_mesa);
+	public PizzaBrotinho(int id_mesa) {
+		super(id_mesa);
 	}
 	
 	// Métodos
