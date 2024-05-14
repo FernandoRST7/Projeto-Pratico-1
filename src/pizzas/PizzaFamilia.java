@@ -1,21 +1,16 @@
 package pizzas;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import main.Sabor;
-
 public class PizzaFamilia extends Pizza {
 
 	// Construtor
 	
-	public PizzaFamilia(List<Sabor> sabores, int id_mesa) {
-		super(new ArrayList<>(4), id_mesa);
+	public PizzaFamilia(int id_mesa) {
+		super(id_mesa);
 	}
 
 	// Métodos
 	
-	public int calcularPreco() {
+	public float calcularPreco() {
 		int preco = 0;
 		for (int i = 0; i < 4; i++) {
 			preco += sabores.get(i).getPreco()/4 * (2);

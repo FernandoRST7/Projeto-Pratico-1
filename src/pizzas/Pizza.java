@@ -1,7 +1,6 @@
 package pizzas;
 import java.util.ArrayList;
 
-import main.Sabor;
 import main.Pedido;
 
 public abstract class Pizza extends Pedido {
@@ -34,7 +33,7 @@ public abstract class Pizza extends Pedido {
 		this.sabores.remove(sabor);
 	}
 	
-	public abstract int calcularPreco();
+	public abstract float calcularPreco();
 	
 	@Override
     public String toString() {

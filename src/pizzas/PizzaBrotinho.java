@@ -1,10 +1,5 @@
 package pizzas;
 
-//import java.util.ArrayList;
-//import java.util.List;
-
-//import main.Sabor;
-
 public class PizzaBrotinho extends Pizza {
 
 	// Construtor
@@ -15,7 +10,7 @@ public class PizzaBrotinho extends Pizza {
 	
 	// Métodos
 	
-	public int calcularPreco() {
+	public float calcularPreco() {
 		int preco = sabores.get(0).getPreco();
 		return preco;
 	}
