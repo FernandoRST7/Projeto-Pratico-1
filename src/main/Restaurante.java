@@ -30,6 +30,7 @@ public class Restaurante {
 	}
 	
 	//nao precisa ter um metodo de adicionar mesa, pois todas as mesas ja estao no restaurante.
+	// OBS(PIETRO): acho q precisa sim viu, pq senao n tem como adicionar as mesas no array
 	//o que podemos fazer eh adicionar um atributo para mesas que indica se ela esta ocupada ou nao.
 	//tipo: private boolean esta_ocupada;
 	
