@@ -4,12 +4,18 @@ import java.util.ArrayList;
 
 public class Restaurante {
 	private ArrayList<Pedido> pedidos;
-	private ArrayList<Mesa> mesas;
+	//private ArrayList<Mesa> mesas;
+	private Mesa mesas[];
 	
 	//construtor
 	public Restaurante() {
 		pedidos = new ArrayList<Pedido>();
-		mesas = new ArrayList<Mesa>();
+		//mesas = new ArrayList<Mesa>();
+		
+		mesas = new Mesa[50];
+		for (int i = 0; i < 50; i++) { //restaurante com 50 mesas.
+			mesas[i] = new Mesa();
+		}
 	}
 	
 	//getters
@@ -17,16 +23,16 @@ public class Restaurante {
 		return pedidos;
 	}
 	
-	public ArrayList<Mesa> getMesas(){
+	public Mesa[] getMesas(){
 		return mesas;
 	}
 	
 	//demais metodos
 	public void addPedido(Pedido novoPedido) {
-		//verifica se o novo pedido ja esta no array
-		if(!pedidos.contains(novoPedido)) {
-			pedidos.add(novoPedido);
-		}
+		pedidos.add(novoPedido);
+		
+		mesas[novoPedido.getIdMesa()].addPedido(novoPedido);
+			
 	}
 	
 	//nao precisa ter um metodo de adicionar mesa, pois todas as mesas ja estao no restaurante.

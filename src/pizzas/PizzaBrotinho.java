@@ -6,6 +6,7 @@ public class PizzaBrotinho extends Pizza {
 
 	public PizzaBrotinho(int id_mesa) {
 		super(id_mesa);
+		maximoSabores = 1;
 	}
 	
 	// Métodos

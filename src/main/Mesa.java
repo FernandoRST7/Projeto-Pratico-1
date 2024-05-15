@@ -6,17 +6,27 @@ public class Mesa {
 	private int id;
 	private static int id_count = 0;
 	private ArrayList<Pedido> pedidos;
+	private boolean ocupada;
 	
 	//Construtor
 	public Mesa() {
 		id_count++;
 		this.id = id_count;
 		this.pedidos = new ArrayList<Pedido>();
+		ocupada = false;
 	}
 	
 	//GEtters e Setters
 	public int getId() {
 		return id;
+	}
+	
+	public void ocuparMesa() {
+		ocupada = true;
+	}
+	
+	public boolean estaOcupada() {
+		return ocupada;
 	}
 	
 	public void addPedido(Pedido pedido) {
@@ -29,7 +39,7 @@ public class Mesa {
 	}
 	
 	@Override
-    public String toString() {
+    public String toString() { //melhorar esse toString aqui; deixar mais formatado.
         StringBuilder sb = new StringBuilder();
         sb.append("Pedidos da Mesa: ");
         for (int i = 0; i < pedidos.size(); i++) {

@@ -5,9 +5,9 @@ import main.Pedido;
 
 public abstract class Pizza extends Pedido {
 	protected ArrayList<Sabor> sabores;
+	protected int maximoSabores;
 	
 	// Construtor
-	
 	public Pizza(int id_mesa) {
 		super(id_mesa);
 		sabores = new ArrayList<Sabor>();
@@ -17,6 +17,10 @@ public abstract class Pizza extends Pedido {
 	
 	public ArrayList<Sabor> getSabores() {
 		return sabores;
+	}
+	
+	public int getMaximoSabores() {
+		return maximoSabores;
 	}
 	
 	//acho que nao precisa de setter de sabores
