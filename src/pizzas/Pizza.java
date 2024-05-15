@@ -23,13 +23,13 @@ public abstract class Pizza extends Pedido {
 	
 	// Métodos
 	
-	public void adicionarSabores(Sabor sabor) {
+	public void adicionarSabor(Sabor sabor) {
 		if (!sabores.contains(sabor)) {
 			this.sabores.add(sabor);
 		}
 	}
 	
-	public void removerSabores(Sabor sabor) {
+	public void removerSabor(Sabor sabor) {
 		this.sabores.remove(sabor);
 	}
 	
