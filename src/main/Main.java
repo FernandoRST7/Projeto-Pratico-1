@@ -9,7 +9,7 @@ public class Main {
 		// a gente tb pode mostrar dados como o tanto de pedidos foram feitos e tal
 		Restaurante restaurante = new Restaurante();
 		Menu.Entrada(restaurante);
-		System.out.println("oi");
+		System.out.println("fim");
 	}
 
 }

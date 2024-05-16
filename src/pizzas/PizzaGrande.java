@@ -6,14 +6,18 @@ public class PizzaGrande extends Pizza {
 	
 	public PizzaGrande(int id_mesa) {
 		super(id_mesa);
+		maximoSabores = 3;
 	}
 
 	// Métodos
 	
 	public float calcularPreco() {
 		int preco = 0;
-		for (int i = 0; i < 3; i++) {
-			preco += sabores.get(i).getPreco()/3 * (1.5);
+		//cobra pelo sabor mais caro
+		for (int i = 0; i < sabores.size(); i++) {
+			if(sabores.get(i).preco > preco) {
+				preco = sabores.get(i).preco;
+			}
 		}
 		return preco;
 	}

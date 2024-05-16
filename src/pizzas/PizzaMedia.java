@@ -6,14 +6,19 @@ public class PizzaMedia extends Pizza {
 	
 	public PizzaMedia(int id_mesa) {
 		super(id_mesa);
+		maximoSabores = 2;
 	}
 	
 	// Métodos
 	
 	public float calcularPreco() {
 		int preco = 0;
-		for (int i = 0; i < 2; i++) {
-			preco += sabores.get(i).getPreco()/2 * (1.25);
+		
+		//cobra pelo sabor mais caro
+		for (int i = 0; i < sabores.size(); i++) {
+			if(sabores.get(i).preco > preco) {
+				preco = sabores.get(i).preco;
+			}
 		}
 		return preco;
 	}

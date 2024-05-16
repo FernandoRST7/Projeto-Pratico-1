@@ -21,11 +21,11 @@ package pizzas;
 }*/
 
 public enum Sabor{
-	CALABRESA(25),
-	MUÇARELA(20),
-	ALCAPARRA(35),
-	QUATRO_QUEIJOS(26),
-	PORTUGUESA(30);
+	CALABRESA(70),
+	MUCARELA(60),
+	ALCAPARRA(80),
+	QUATRO_QUEIJOS(70),
+	PORTUGUESA(60);
 	// Adicionar mais sabores se quiserem
 
 	public int preco;
