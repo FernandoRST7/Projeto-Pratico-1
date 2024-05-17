@@ -9,7 +9,7 @@ import pizzas.PizzaGrande;
 import pizzas.PizzaMedia;
 import pizzas.Sabor;
 
-public class Menu { // fazer resistente a burrices
+public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
 
     private static void imprime_sabores(){
         // imprime os sabores disponíveis
@@ -25,9 +25,8 @@ public class Menu { // fazer resistente a burrices
         return sabor;
     }
 
-    //NÃO TO CONSEGUINDO FAZER ISSO FUNCIONAR
     private static Pizza monta_pizza(Scanner scanner, Pizza pizza){
-    	String input = "";
+    	String input;
     	int n_sabores;
     	
         System.out.println("Digite o número de sabores da pizza:");
@@ -43,17 +42,6 @@ public class Menu { // fazer resistente a burrices
             else {
                 break;
             }
-    	}
-
-        
-        if (n_sabores == 1) {
-            System.out.println("Digite o id do sabor da pizza: ");
-            imprime_sabores();
-            input = scanner.nextLine();
-            Sabor sabor = busca_sabor(input);
-            pizza.adicionarSabor(sabor);
-            
-            return pizza;
         }
         
         for (int i = 1; i < n_sabores + 1; i++){
@@ -66,11 +54,49 @@ public class Menu { // fazer resistente a burrices
         return pizza;
     } 
 
+    private static void registra_pizza(Scanner scanner, Restaurante restaurante){
+        String input;
+        Pizza pizza;
+        System.out.println("Digite o id da mesa: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        System.out.println("Qual o tamanho da pizza?");
+        System.out.println("- Brotinho (digite 1);");
+        System.out.println("- Média (digite 2);");
+        System.out.println("- Grande (digite 3);");
+        System.out.println("- Família (digite 4);");
+
+        input = scanner.nextLine();
+        if (input.equalsIgnoreCase("1")){
+            pizza = new PizzaBrotinho(id);
+            System.out.println("Digite o id do sabor da pizza: ");
+            imprime_sabores();
+            input = scanner.nextLine();
+            Sabor sabor = busca_sabor(input);
+            pizza.adicionarSabor(sabor);
+            restaurante.addPedido(pizza);
+        }
+        else if (input.equalsIgnoreCase("2")){
+            pizza = new PizzaMedia(id);
+            pizza = monta_pizza(scanner, pizza);
+            restaurante.addPedido(pizza);
+        }
+        else if (input.equalsIgnoreCase("3")){
+            pizza = new PizzaGrande(id);
+            pizza = monta_pizza(scanner, pizza);
+            restaurante.addPedido(pizza);
+        }
+        else if (input.equalsIgnoreCase("4")){
+            pizza = new PizzaFamilia(id);
+            pizza = monta_pizza(scanner, pizza);
+            restaurante.addPedido(pizza);
+        }
+    }
+
     public static void Entrada(Restaurante restaurante){
         // lê a entrada do usuário e registra tudo
         Scanner scanner = new Scanner(System.in);
         while (true){
-        	//falta fazer adicionar bebida, adicionar cliente na mesa e ver sabores em ordem.
+        	//falta fazer adicionar bebida e adicionar cliente na mesa.
             System.out.println("- Adicionar cliente na mesa (digite 1);");
             System.out.println("- Adicionar pedido de pizza (digite 2);");
             System.out.println("- Adicionar pedido de bebida (digite 3);");
@@ -81,7 +107,7 @@ public class Menu { // fazer resistente a burrices
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("6")){
                 System.out.println("Fim do expediente.");
-                // imprimir dados do restaurante (a fazer)
+                // (PIETRO) IMPRIMIR DADOS DO RESTAURANTE (A FAZER)
                 break;
             }
             
@@ -89,12 +115,22 @@ public class Menu { // fazer resistente a burrices
             else if (input.equalsIgnoreCase("3")){
 
             }
+
+            // imprime sabores
+            else if (input.equalsIgnoreCase("4")){
+                imprime_sabores();
+            }
             
             //pizza
             else if (input.equalsIgnoreCase("2")){
-            	Pizza pizza;
+                
+                registra_pizza(scanner, restaurante);
+                // (PIETRO) EU MOVI ESSE BLOCO INTEIRO DE CODIGO COMENTADO PRA DENTRO DESSA FUNCAO REGISTRA_PIZZA
+                // PARA FICAR MAIS ORGANIZADO ESSE METODO ENTRADA
+
+            	// Pizza pizza;
             	
-                System.out.println("Digite o id da mesa: ");
+                /*System.out.println("Digite o id da mesa: ");
                 int id = Integer.parseInt(scanner.nextLine());
                 System.out.println("Qual o tamanho da pizza?");
                 System.out.println("- Brotinho (digite 1);");
@@ -103,64 +139,30 @@ public class Menu { // fazer resistente a burrices
                 System.out.println("- Família (digite 4);");
 
                 input = scanner.nextLine();
-                int n_sabores;
                 if (input.equalsIgnoreCase("1")){
                     pizza = new PizzaBrotinho(id);
-                    n_sabores = 1;
-                    for (int i=1; i<n_sabores+1; i++){
-                        System.out.println("Digite o id do sabor da pizza: ");
-                        imprime_sabores();
-                        input = scanner.nextLine();
-                        Sabor sabor = busca_sabor(input);
-                        pizza.adicionarSabor(sabor);
-                    }
+                    System.out.println("Digite o id do sabor da pizza: ");
+                    imprime_sabores();
+                    input = scanner.nextLine();
+                    Sabor sabor = busca_sabor(input);
+                    pizza.adicionarSabor(sabor);
                     restaurante.addPedido(pizza);
                 }
                 else if (input.equalsIgnoreCase("2")){
                     pizza = new PizzaMedia(id);
-                    
-                    //deixei as partes antigas em comentarios,
-                    //mas acho que nao precisamos mais delas porque o monta_pizzza deu certo
-                    
-                    /*n_sabores = 2;
-                    for (int i = 1; i < n_sabores + 1; i++){
-                        System.out.println("Digite o id do " + i + "° sabor da pizza: ");
-                        imprime_sabores();
-                        input = scanner.nextLine();
-                        Sabor sabor = busca_sabor(input);
-                        pizza.adicionarSabor(sabor);
-                    }*/
                     pizza = monta_pizza(scanner, pizza);
                     restaurante.addPedido(pizza);
                 }
                 else if (input.equalsIgnoreCase("3")){
                     pizza = new PizzaGrande(id);
-                    
-                    /*n_sabores = 3;
-                    for (int i = 1; i < n_sabores + 1; i++){
-                        System.out.println("Digite o número do " + i + "° sabor da pizza: ");
-                        imprime_sabores();
-                        input = scanner.nextLine();
-                        Sabor sabor = busca_sabor(input);
-                        pizza.adicionarSabor(sabor);
-                    }*/
                     pizza = monta_pizza(scanner, pizza);
                     restaurante.addPedido(pizza);
                 }
                 else if (input.equalsIgnoreCase("4")){
                     pizza = new PizzaFamilia(id);
-                    /*n_sabores = 4;
-                    for (int i = 1; i < n_sabores + 1; i++){
-                        System.out.println("Digite o número do " + i + "° sabor da pizza: ");
-                        imprime_sabores();
-                        input = scanner.nextLine();
-                        Sabor sabor = busca_sabor(input);
-                        pizza.adicionarSabor(sabor);
-                    }*/
-                    
                     pizza = monta_pizza(scanner, pizza);
                     restaurante.addPedido(pizza);
-                }
+                }*/
             }
             
             //ver pedidos de uma mesa
