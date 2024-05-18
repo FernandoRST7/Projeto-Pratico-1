@@ -91,6 +91,36 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             restaurante.addPedido(pizza);
         }
     }
+    
+    private static void registra_bebida(Scanner scanner, Restaurante restaurante){
+    	String input;
+        Bebida bebida;
+        System.out.println("Digite o id da mesa: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        System.out.println("Qual a bebida?");
+        System.out.println("- Suco (digite 1);");
+        System.out.println("- Refrigerante (digite 2);");
+        System.out.println("- Vinho (digite 3);");
+        System.out.println("- Água (digite 4);");
+        
+        input = scanner.nextLine();
+        if (input.equalsIgnoreCase("1")){
+            bebida = new Bebida(id, "Suco", 8);
+            restaurante.addPedido(bebida);
+        }
+        else if (input.equalsIgnoreCase("2")){
+        	bebida = new Bebida(id, "Refrigerante", 6);
+            restaurante.addPedido(bebida);
+        }
+        else if (input.equalsIgnoreCase("3")){
+        	bebida = new Bebida(id, "Vinho", 30);
+            restaurante.addPedido(bebida);
+        } 
+        else if (input.equalsIgnoreCase("4")){
+        	bebida = new Bebida(id, "Água", 3);
+            restaurante.addPedido(bebida);
+        }
+    }
 
     public static void Entrada(Restaurante restaurante){
         // lê a entrada do usuário e registra tudo
@@ -113,6 +143,7 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             
             //bebida
             else if (input.equalsIgnoreCase("3")){
+            	registra_bebida(scanner, restaurante);
 
             }
 
@@ -167,7 +198,7 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             
             //ver pedidos de uma mesa
             else if (input.equalsIgnoreCase("5")) {
-                System.out.println("Digite o id do sabor da mesa a ser visualizada: ");
+                System.out.println("Digite o id da mesa a ser visualizada: ");
                 int idMesa = Integer.parseInt(scanner.nextLine());
                 System.out.println(restaurante.getMesas()[idMesa]);
                 
