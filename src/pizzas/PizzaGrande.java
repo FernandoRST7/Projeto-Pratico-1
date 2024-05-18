@@ -24,7 +24,7 @@ public class PizzaGrande extends Pizza {
 	
 	public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Sabores da Pizza grande (8 fatias): ");
+        sb.append("Pizza grande (8 fatias): ");
         for (int i = 0; i < sabores.size(); i++) {
             sb.append(sabores.get(i));
             if (i < sabores.size() - 1) {

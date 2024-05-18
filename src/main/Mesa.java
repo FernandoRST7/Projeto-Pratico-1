@@ -40,8 +40,13 @@ public class Mesa {
 	
 	@Override
     public String toString() { //melhorar esse toString aqui; deixar mais formatado.
+		
+		if (pedidos.size() == 0) {
+			return "A mesa " + id + " não tem pedidos.";
+		}
+		
         StringBuilder sb = new StringBuilder();
-        sb.append("Pedidos da Mesa: ");
+        sb.append("Pedidos da Mesa:\n");
         for (int i = 0; i < pedidos.size(); i++) {
             sb.append(pedidos.get(i));
             if (i < pedidos.size() - 1) {

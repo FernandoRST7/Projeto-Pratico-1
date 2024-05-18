@@ -25,6 +25,6 @@ public abstract class Pedido {
 	public String toString() {
 		return "Dados do Pedido: " + '\n' + 
 				"id: " + this.id + '\n' + 
-				"id da mesa: " + this.id_mesa;
+				"id da mesa que fez o pedido: " + this.id_mesa;
 	}
 }

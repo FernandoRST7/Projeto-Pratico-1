@@ -18,7 +18,7 @@ public class PizzaBrotinho extends Pizza {
 	
 	public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Sabores da Pizza brotinho (4 fatias): ");
+        sb.append("Pizza brotinho (4 fatias): ");
         for (int i = 0; i < sabores.size(); i++) {
             sb.append(sabores.get(i));
             if (i < sabores.size() - 1) {

@@ -49,6 +49,16 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             imprime_sabores();
             input = scanner.nextLine();
             Sabor sabor = busca_sabor(input);
+            
+            //verifica se o sabor já foi adicionado na pizza
+            while (pizza.getSabores().contains(sabor)) {
+            	System.out.println("Esse sabor já foi adicionado, não pode ser adicionado novamente.");
+                System.out.println("Digite o id do " + i + "° sabor da pizza: ");
+                imprime_sabores();
+                input = scanner.nextLine();
+                sabor = busca_sabor(input);
+            }
+            
             pizza.adicionarSabor(sabor);
         }
         return pizza;
@@ -57,8 +67,18 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
     private static void registra_pizza(Scanner scanner, Restaurante restaurante){
         String input;
         Pizza pizza;
+        boolean pedidoCorreto = true;
+        
         System.out.println("Digite o id da mesa: ");
         int id = Integer.parseInt(scanner.nextLine());
+        
+        //verifica se a mesa tem clientes
+        while (!restaurante.getMesas()[id].estaOcupada()) {
+            System.out.println("Essa mesa não está ocupada por nenhum cliente.");
+            System.out.println("Digite o id de uma mesa válida: ");
+            id = Integer.parseInt(scanner.nextLine());
+        }
+        
         System.out.println("Qual o tamanho da pizza?");
         System.out.println("- Brotinho (digite 1);");
         System.out.println("- Média (digite 2);");
@@ -75,28 +95,51 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             pizza.adicionarSabor(sabor);
             restaurante.addPedido(pizza);
         }
+        
         else if (input.equalsIgnoreCase("2")){
             pizza = new PizzaMedia(id);
             pizza = monta_pizza(scanner, pizza);
             restaurante.addPedido(pizza);
         }
+        
         else if (input.equalsIgnoreCase("3")){
             pizza = new PizzaGrande(id);
             pizza = monta_pizza(scanner, pizza);
             restaurante.addPedido(pizza);
         }
+        
         else if (input.equalsIgnoreCase("4")){
             pizza = new PizzaFamilia(id);
             pizza = monta_pizza(scanner, pizza);
             restaurante.addPedido(pizza);
+        }
+        
+        else {
+            System.out.println("Esse valor é inválido.");
+            System.out.println("Abortando pedido de pizza.");
+            pedidoCorreto = false;
+        }
+        
+        if (pedidoCorreto) {
+            System.out.println("Pedido de pizza enviado para a cozinha.");
         }
     }
     
     private static void registra_bebida(Scanner scanner, Restaurante restaurante){
     	String input;
         Bebida bebida;
+        boolean pedidoCorreto = true;
+        
         System.out.println("Digite o id da mesa: ");
         int id = Integer.parseInt(scanner.nextLine());
+        
+        //verifica se a mesa tem clientes
+        while (!restaurante.getMesas()[id].estaOcupada()) {
+            System.out.println("Essa mesa não está ocupada por nenhum cliente.");
+            System.out.println("Digite o id de uma mesa válida: ");
+            id = Integer.parseInt(scanner.nextLine());
+        }
+        
         System.out.println("Qual a bebida?");
         System.out.println("- Suco (digite 1);");
         System.out.println("- Refrigerante (digite 2);");
@@ -108,48 +151,70 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             bebida = new Bebida(id, "Suco", 8);
             restaurante.addPedido(bebida);
         }
+        
         else if (input.equalsIgnoreCase("2")){
         	bebida = new Bebida(id, "Refrigerante", 6);
             restaurante.addPedido(bebida);
         }
+        
         else if (input.equalsIgnoreCase("3")){
         	bebida = new Bebida(id, "Vinho", 30);
             restaurante.addPedido(bebida);
         } 
+        
         else if (input.equalsIgnoreCase("4")){
         	bebida = new Bebida(id, "Água", 3);
             restaurante.addPedido(bebida);
+        }
+        
+        else {
+            System.out.println("Esse valor é inválido.");
+            System.out.println("Abortando pedido de bebida.");
+            pedidoCorreto = false;
+        }
+        
+        if (pedidoCorreto) {
+            System.out.println("Pedido de bebida enviado para a cozinha.");
         }
     }
 
     public static void Entrada(Restaurante restaurante){
         // lê a entrada do usuário e registra tudo
         Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("INÍCIO DO EXPEDIENTE");
+        
         while (true){
-        	//falta fazer adicionar bebida e adicionar cliente na mesa.
+        	//falta fazer adicionar bebida.
+        	//(GABRIEL) acho que precisamos de umas funções mais elaboradas, talvez elas possam ficar pra entrega final.
+        	//(GABRIEL) tipo imprimir pedidos na cozinha por ordem de prioridade,
+        	//(GABRIEL) ou marcar um pedido como pronto, que seria excluir ele do Array e da mesa.
+            System.out.println("#############################################");
             System.out.println("- Adicionar cliente na mesa (digite 1);");
             System.out.println("- Adicionar pedido de pizza (digite 2);");
             System.out.println("- Adicionar pedido de bebida (digite 3);");
             System.out.println("- Ver sabores em ordem (digite 4);");
             System.out.println("- Ver pedidos de uma mesa (digite 5);");
-            System.out.println("- Encerrar expediente (digite 6);");
+            System.out.println("- Ver mesas livres (digite 6);");
+            System.out.println("- Encerrar expediente (digite 7);");
 
             String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("6")){
-                System.out.println("Fim do expediente.");
+            if (input.equalsIgnoreCase("7")){
+                System.out.println("#############################################");
+                System.out.println("FIM DO EXPEDIENTE");
                 // (PIETRO) IMPRIMIR DADOS DO RESTAURANTE (A FAZER)
                 break;
             }
             
-            //bebida
-            else if (input.equalsIgnoreCase("3")){
-            	registra_bebida(scanner, restaurante);
+            //ocupar mesa
+            else if (input.equalsIgnoreCase("1")) {
+                System.out.println("Qual o número da mesa que será ocupada?");
+                int idMesa = Integer.parseInt(scanner.nextLine());
+                
+                restaurante.getMesas()[idMesa].ocuparMesa();
+                
+                System.out.println("Mesa " + idMesa + " foi ocupada.");
 
-            }
-
-            // imprime sabores
-            else if (input.equalsIgnoreCase("4")){
-                imprime_sabores();
             }
             
             //pizza
@@ -196,13 +261,47 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
                 }*/
             }
             
+            //bebida
+            else if (input.equalsIgnoreCase("3")){
+            	registra_bebida(scanner, restaurante);
+
+            }
+
+            // imprime sabores
+            else if (input.equalsIgnoreCase("4")){
+                imprime_sabores();
+            }
+            
             //ver pedidos de uma mesa
             else if (input.equalsIgnoreCase("5")) {
                 System.out.println("Digite o id da mesa a ser visualizada: ");
                 int idMesa = Integer.parseInt(scanner.nextLine());
-                System.out.println(restaurante.getMesas()[idMesa]);
                 
-
+                //verifica se a mesa está ocupada.
+                while (!restaurante.getMesas()[idMesa].estaOcupada()) {
+                    System.out.println("Essa mesa não está ocupada.");
+                    System.out.println("Digite um id válido:");
+                    
+                    idMesa = Integer.parseInt(scanner.nextLine());
+                }
+                
+                System.out.println(restaurante.getMesas()[idMesa]);
+            }
+            
+            //ver mesas ocupadas
+            else if(input.equalsIgnoreCase("6")) {
+            	System.out.println("Mesas livres:");
+            	
+            	for (int i = 0; i < restaurante.getMesas().length; i++) {
+            		if (!restaurante.getMesas()[i].estaOcupada()) {
+            			System.out.println("Mesa " + (i + 1) + ";");
+            		}
+            	}
+            }
+            
+            else {
+            	System.out.println("Comando inválido.");
+            	System.out.println("Digite um comando válido.");            	
             }
         }
         scanner.close();
