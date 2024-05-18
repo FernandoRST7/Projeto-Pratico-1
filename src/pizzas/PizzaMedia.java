@@ -25,7 +25,7 @@ public class PizzaMedia extends Pizza {
 	
 	public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Sabores da Pizza média (6 fatias): ");
+        sb.append("Pizza média (6 fatias): ");
         for (int i = 0; i < sabores.size(); i++) {
             sb.append(sabores.get(i));
             if (i < sabores.size() - 1) {
