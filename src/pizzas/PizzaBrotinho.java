@@ -25,6 +25,7 @@ public class PizzaBrotinho extends Pizza {
                 sb.append(", ");
             }
         }
+        sb.append(" -> (mesa " + super.getIdMesa() + ")");
         return sb.toString();
     }
 }
