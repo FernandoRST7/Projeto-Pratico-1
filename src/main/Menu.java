@@ -73,7 +73,7 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
         int id = Integer.parseInt(scanner.nextLine());
         
         //verifica se a mesa tem clientes
-        while (!restaurante.getMesas()[id].estaOcupada()) {
+        while (!restaurante.getMesas()[id - 1].estaOcupada()) {
             System.out.println("Essa mesa não está ocupada por nenhum cliente.");
             System.out.println("Digite o id de uma mesa válida: ");
             id = Integer.parseInt(scanner.nextLine());
@@ -134,48 +134,50 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
         int id = Integer.parseInt(scanner.nextLine());
         
         //verifica se a mesa tem clientes
-        while (!restaurante.getMesas()[id].estaOcupada()) {
+        if (!restaurante.getMesas()[id - 1].estaOcupada()) {
             System.out.println("Essa mesa não está ocupada por nenhum cliente.");
-            System.out.println("Digite o id de uma mesa válida: ");
-            id = Integer.parseInt(scanner.nextLine());
-        }
-        
-        System.out.println("Qual a bebida?");
-        System.out.println("- Suco (digite 1);");
-        System.out.println("- Refrigerante (digite 2);");
-        System.out.println("- Vinho (digite 3);");
-        System.out.println("- Água (digite 4);");
-        
-        input = scanner.nextLine();
-        if (input.equalsIgnoreCase("1")){
-            bebida = new Bebida(id, "Suco", 8);
-            restaurante.addPedido(bebida);
-        }
-        
-        else if (input.equalsIgnoreCase("2")){
-        	bebida = new Bebida(id, "Refrigerante", 6);
-            restaurante.addPedido(bebida);
-        }
-        
-        else if (input.equalsIgnoreCase("3")){
-        	bebida = new Bebida(id, "Vinho", 30);
-            restaurante.addPedido(bebida);
-        } 
-        
-        else if (input.equalsIgnoreCase("4")){
-        	bebida = new Bebida(id, "Água", 3);
-            restaurante.addPedido(bebida);
+            System.out.println("Abortando pedido de bebida.");
         }
         
         else {
-            System.out.println("Esse valor é inválido.");
-            System.out.println("Abortando pedido de bebida.");
-            pedidoCorreto = false;
+            System.out.println("Qual a bebida?");
+            System.out.println("- Suco (digite 1);");
+            System.out.println("- Refrigerante (digite 2);");
+            System.out.println("- Vinho (digite 3);");
+            System.out.println("- Água (digite 4);");
+            
+            input = scanner.nextLine();
+            if (input.equalsIgnoreCase("1")){
+                bebida = new Bebida(id, "Suco", 8);
+                restaurante.addPedido(bebida);
+            }
+            
+            else if (input.equalsIgnoreCase("2")){
+            	bebida = new Bebida(id, "Refrigerante", 6);
+                restaurante.addPedido(bebida);
+            }
+            
+            else if (input.equalsIgnoreCase("3")){
+            	bebida = new Bebida(id, "Vinho", 30);
+                restaurante.addPedido(bebida);
+            } 
+            
+            else if (input.equalsIgnoreCase("4")){
+            	bebida = new Bebida(id, "Água", 3);
+                restaurante.addPedido(bebida);
+            }
+            
+            else {
+                System.out.println("Esse valor é inválido.");
+                System.out.println("Abortando pedido de bebida.");
+                pedidoCorreto = false;
+            }
+            
+            if (pedidoCorreto) {
+                System.out.println("Pedido de bebida enviado para a cozinha.");
+            }
         }
-        
-        if (pedidoCorreto) {
-            System.out.println("Pedido de bebida enviado para a cozinha.");
-        }
+
     }
 
     public static void Entrada(Restaurante restaurante){
@@ -193,13 +195,14 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             System.out.println("- Adicionar cliente na mesa (digite 1);");
             System.out.println("- Adicionar pedido de pizza (digite 2);");
             System.out.println("- Adicionar pedido de bebida (digite 3);");
-            System.out.println("- Ver sabores em ordem (digite 4);");
+            System.out.println("- Ver sabores do cardápio em ordem (digite 4);");
             System.out.println("- Ver pedidos de uma mesa (digite 5);");
             System.out.println("- Ver mesas livres (digite 6);");
-            System.out.println("- Encerrar expediente (digite 7);");
+            System.out.println("- Ver pedidos sendo preparados na cozinha (digite 7);");
+            System.out.println("- Encerrar expediente (digite 8);");
 
             String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("7")){
+            if (input.equalsIgnoreCase("8")){
                 System.out.println("#############################################");
                 System.out.println("FIM DO EXPEDIENTE");
                 // (PIETRO) IMPRIMIR DADOS DO RESTAURANTE (A FAZER)
@@ -211,7 +214,7 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
                 System.out.println("Qual o número da mesa que será ocupada?");
                 int idMesa = Integer.parseInt(scanner.nextLine());
                 
-                restaurante.getMesas()[idMesa].ocuparMesa();
+                restaurante.getMesas()[idMesa - 1].ocuparMesa();
                 
                 System.out.println("Mesa " + idMesa + " foi ocupada.");
 
@@ -278,14 +281,13 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
                 int idMesa = Integer.parseInt(scanner.nextLine());
                 
                 //verifica se a mesa está ocupada.
-                while (!restaurante.getMesas()[idMesa].estaOcupada()) {
+                if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) {
                     System.out.println("Essa mesa não está ocupada.");
-                    System.out.println("Digite um id válido:");
-                    
-                    idMesa = Integer.parseInt(scanner.nextLine());
                 }
                 
-                System.out.println(restaurante.getMesas()[idMesa]);
+                else {
+                    System.out.println(restaurante.getMesas()[idMesa]);
+                }
             }
             
             //ver mesas ocupadas
@@ -297,6 +299,15 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             			System.out.println("Mesa " + (i + 1) + ";");
             		}
             	}
+            }
+            
+            //ver pedidos na cozinha
+            else if(input.equalsIgnoreCase("7")) {
+    			System.out.println("Pedidos por ordem de prioridade (mais antigos para mais recentes):");
+    			
+    			for (int i = 0; i < restaurante.getPedidos().size(); i++) {
+        			System.out.println(restaurante.getPedidos().get(i));
+    			}
             }
             
             else {
