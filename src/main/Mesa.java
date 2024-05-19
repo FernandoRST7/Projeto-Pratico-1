@@ -16,7 +16,7 @@ public class Mesa {
 		ocupada = false;
 	}
 	
-	//GEtters e Setters
+	//Getters e Setters
 	public int getId() {
 		return id;
 	}
@@ -30,7 +30,7 @@ public class Mesa {
 	}
 	
 	public void addPedido(Pedido pedido) {
-		//no cado de uma pessoa pedir varias coisas teria q chamar esse metodo varias vezes
+		//no caso de uma pessoa pedir varias coisas teria q chamar esse metodo varias vezes
 		this.pedidos.add(pedido);
 	}
 	
