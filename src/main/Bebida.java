@@ -21,4 +21,10 @@ public class Bebida extends Pedido {
 		return preco;
 	}
 	
+	// Métodos
+	
+	public String toString() {
+	    return "Bebida: " + this.nome + ", " + this.preco + " reais" + "\n" +
+	           "Mesa: " + this.getIdMesa();
+	}
 }
