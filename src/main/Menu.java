@@ -9,7 +9,7 @@ import pizzas.PizzaGrande;
 import pizzas.PizzaMedia;
 import pizzas.Sabor;
 
-public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
+public class Menu {
 
     private static void imprime_sabores(){
         // imprime os sabores disponíveis
