@@ -187,10 +187,6 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
         System.out.println("INÍCIO DO EXPEDIENTE");
         
         while (true){
-        	//falta fazer adicionar bebida.
-        	//(GABRIEL) acho que precisamos de umas funções mais elaboradas, talvez elas possam ficar pra entrega final.
-        	//(GABRIEL) tipo imprimir pedidos na cozinha por ordem de prioridade,
-        	//(GABRIEL) ou marcar um pedido como pronto, que seria excluir ele do Array e da mesa.
             System.out.println("#############################################");
             System.out.println("- Adicionar cliente na mesa (digite 1);");
             System.out.println("- Adicionar pedido de pizza (digite 2);");
@@ -205,7 +201,6 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             if (input.equalsIgnoreCase("8")){
                 System.out.println("#############################################");
                 System.out.println("FIM DO EXPEDIENTE");
-                // (PIETRO) IMPRIMIR DADOS DO RESTAURANTE (A FAZER)
                 break;
             }
             
@@ -224,44 +219,6 @@ public class Menu { // (PIETRO) FAZER EXCEÇÕES PARA NAO QUEBRAR O CODIGO!!!!
             else if (input.equalsIgnoreCase("2")){
                 
                 registra_pizza(scanner, restaurante);
-                // (PIETRO) EU MOVI ESSE BLOCO INTEIRO DE CODIGO COMENTADO PRA DENTRO DESSA FUNCAO REGISTRA_PIZZA
-                // PARA FICAR MAIS ORGANIZADO ESSE METODO ENTRADA
-
-            	// Pizza pizza;
-            	
-                /*System.out.println("Digite o id da mesa: ");
-                int id = Integer.parseInt(scanner.nextLine());
-                System.out.println("Qual o tamanho da pizza?");
-                System.out.println("- Brotinho (digite 1);");
-                System.out.println("- Média (digite 2);");
-                System.out.println("- Grande (digite 3);");
-                System.out.println("- Família (digite 4);");
-
-                input = scanner.nextLine();
-                if (input.equalsIgnoreCase("1")){
-                    pizza = new PizzaBrotinho(id);
-                    System.out.println("Digite o id do sabor da pizza: ");
-                    imprime_sabores();
-                    input = scanner.nextLine();
-                    Sabor sabor = busca_sabor(input);
-                    pizza.adicionarSabor(sabor);
-                    restaurante.addPedido(pizza);
-                }
-                else if (input.equalsIgnoreCase("2")){
-                    pizza = new PizzaMedia(id);
-                    pizza = monta_pizza(scanner, pizza);
-                    restaurante.addPedido(pizza);
-                }
-                else if (input.equalsIgnoreCase("3")){
-                    pizza = new PizzaGrande(id);
-                    pizza = monta_pizza(scanner, pizza);
-                    restaurante.addPedido(pizza);
-                }
-                else if (input.equalsIgnoreCase("4")){
-                    pizza = new PizzaFamilia(id);
-                    pizza = monta_pizza(scanner, pizza);
-                    restaurante.addPedido(pizza);
-                }*/
             }
             
             //bebida

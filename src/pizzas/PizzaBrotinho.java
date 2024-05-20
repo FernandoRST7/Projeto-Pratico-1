@@ -3,14 +3,12 @@ package pizzas;
 public class PizzaBrotinho extends Pizza {
 
 	// Construtor
-
 	public PizzaBrotinho(int id_mesa) {
 		super(id_mesa);
 		maximoSabores = 1;
 	}
 	
 	// Métodos
-	
 	public float calcularPreco() {
 		int preco = sabores.get(0).getPreco();
 		return preco;

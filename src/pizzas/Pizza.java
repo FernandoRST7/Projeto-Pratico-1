@@ -14,7 +14,6 @@ public abstract class Pizza extends Pedido {
 	}
 	
 	// Getters
-	
 	public ArrayList<Sabor> getSabores() {
 		return sabores;
 	}
@@ -23,10 +22,7 @@ public abstract class Pizza extends Pedido {
 		return maximoSabores;
 	}
 	
-	//acho que nao precisa de setter de sabores
-	
 	// Métodos
-	
 	public void adicionarSabor(Sabor sabor) {
 		if (!sabores.contains(sabor)) {
 			this.sabores.add(sabor);

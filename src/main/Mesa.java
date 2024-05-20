@@ -30,7 +30,6 @@ public class Mesa {
 	}
 	
 	public void addPedido(Pedido pedido) {
-		//no caso de uma pessoa pedir varias coisas teria q chamar esse metodo varias vezes
 		this.pedidos.add(pedido);
 	}
 	
@@ -39,7 +38,7 @@ public class Mesa {
 	}
 	
 	@Override
-    public String toString() { //melhorar esse toString aqui; deixar mais formatado.
+    public String toString() {
 		
 		if (pedidos.size() == 0) {
 			return "A mesa " + id + " não tem pedidos.";
