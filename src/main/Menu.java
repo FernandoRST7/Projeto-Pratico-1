@@ -66,7 +66,7 @@ public class Menu {
 
     private static void registra_pizza(Scanner scanner, Restaurante restaurante){
         String input;
-        Pizza pizza;
+        Pizza pizza=null;
         boolean pedidoCorreto = true;
         
         System.out.println("Digite o id da mesa: ");
@@ -121,13 +121,14 @@ public class Menu {
         }
         
         if (pedidoCorreto) {
+            restaurante.adicionaDinheiro(pizza.calcularPreco());
             System.out.println("Pedido de pizza enviado para a cozinha.");
         }
     }
     
     private static void registra_bebida(Scanner scanner, Restaurante restaurante){
     	String input;
-        Bebida bebida;
+        Bebida bebida=null;
         boolean pedidoCorreto = true;
         
         System.out.println("Digite o id da mesa: ");
@@ -174,6 +175,7 @@ public class Menu {
             }
             
             if (pedidoCorreto) {
+                restaurante.adicionaDinheiro(bebida.getPreco());
                 System.out.println("Pedido de bebida enviado para a cozinha.");
             }
         }
@@ -200,6 +202,7 @@ public class Menu {
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("8")){
                 System.out.println("#############################################");
+                System.out.println(restaurante.imprimeDados());
                 System.out.println("FIM DO EXPEDIENTE");
                 break;
             }
@@ -211,6 +214,7 @@ public class Menu {
                 
                 restaurante.getMesas()[idMesa - 1].ocuparMesa();
                 
+                restaurante.adicionaCliente();
                 System.out.println("Mesa " + idMesa + " foi ocupada.");
 
             }

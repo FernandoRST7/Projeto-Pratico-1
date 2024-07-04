@@ -9,9 +9,9 @@ public class Interface extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
-    public Interface() {
+    public Interface(Restaurante restaurante) {
         // Configurações do JFrame
-        setTitle("Exemplo de CardLayout");
+        setTitle("Pizzaria");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -24,9 +24,11 @@ public class Interface extends JFrame {
         JPanel painel_inicial = criarPainelInicial();
         JPanel menu1 = criarMenu1();
         JPanel menu2 = criarMenu2();
+        JPanel menu8 = criarMenu8();
         mainPanel.add(painel_inicial, "Menu Inicial");
         mainPanel.add(menu1, "Menu 1");
         mainPanel.add(menu2, "Menu 2");
+        mainPanel.add(menu8, "Menu 8");
 
         // Adicionando o painel principal ao JFrame
         add(mainPanel);
@@ -61,7 +63,7 @@ public class Interface extends JFrame {
 
         botaoMenu8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Fim do expediente\nImprimindo dados da noite..."); 
+                cardLayout.show(mainPanel, "Menu 8"); 
                 //imprimir dados do expediente
                 //System.exit(0);
             }
@@ -112,8 +114,17 @@ public class Interface extends JFrame {
         return painel;
     }
 
+    // Método para criar o Menu 8
+    private JPanel criarMenu8() {
+        JPanel painel = new JPanel();
+        JLabel label = new JLabel("Fim do expediente.");
+        painel.add(label);
+        painel.add(new JTextField("Imprimindo os dados da noite..."));
+        return painel;
+    }
+
     public static void main(String[] args) {
-        // Criando uma instância do JFrame
-        new Interface();
+        Restaurante restaurante = new Restaurante();
+        new Interface(restaurante);
     }
 }

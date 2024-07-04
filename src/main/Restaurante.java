@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Restaurante {
 	private ArrayList<Pedido> pedidos;
 	private Mesa mesas[];
+	private float dinheiro;
+	private int clientes;
 	
 	//construtor
 	public Restaurante() {
@@ -14,6 +16,8 @@ public class Restaurante {
 		for (int i = 0; i < 50; i++) { //restaurante com 50 mesas.
 			mesas[i] = new Mesa();
 		}
+
+		dinheiro = 0;
 	}
 	
 	//getters
@@ -35,5 +39,21 @@ public class Restaurante {
 	
 	public void entregaPedido(Pedido pedidoEntregue) {
 		pedidos.remove(pedidoEntregue);
+	}
+
+	public void adicionaDinheiro(float valor){
+		dinheiro += valor;
+	}
+
+	public void adicionaCliente(){
+		clientes++;
+	}
+
+	public String imprimeDados(){
+		String string="";
+		string += "Número de clientes: " + clientes + ".\n";
+		string += "Número de pedidos: " + pedidos.size() + ".\n";
+		string += "Dinheiro ganho: " + dinheiro + ".\n";
+		return string;
 	}
 }
