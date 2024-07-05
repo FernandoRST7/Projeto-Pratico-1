@@ -49,6 +49,14 @@ public class Restaurante {
 		clientes++;
 	}
 
+	public String printaPedidos(){
+		String string="";
+		for (int i=0; i<pedidos.size(); i++){
+			string += pedidos.get(i) + "\n";
+		}
+		return string;
+	}
+
 	public String imprimeDados(){
 		String string="";
 		string += "Número de clientes: " + clientes + ".\n";

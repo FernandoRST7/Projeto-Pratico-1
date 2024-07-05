@@ -11,11 +11,13 @@ import pizzas.Sabor;
 
 public class Menu {
 
-    private static void imprime_sabores(){
+    public static String imprime_sabores(){
+        String string="";
         // imprime os sabores disponíveis
         for (Sabor sabor : Sabor.values()){
-            System.out.println("[" + sabor.ordinal() + "] " + sabor);
+            string += ("[" + sabor.ordinal() + "] " + sabor) + "\n";
         }
+        return string;
     }
 
     private static Sabor busca_sabor(String input){
@@ -46,7 +48,7 @@ public class Menu {
         
         for (int i = 1; i < n_sabores + 1; i++){
             System.out.println("Digite o id do " + i + "° sabor da pizza: ");
-            imprime_sabores();
+            System.out.println(imprime_sabores());
             input = scanner.nextLine();
             Sabor sabor = busca_sabor(input);
             
@@ -54,7 +56,7 @@ public class Menu {
             while (pizza.getSabores().contains(sabor)) {
             	System.out.println("Esse sabor já foi adicionado, não pode ser adicionado novamente.");
                 System.out.println("Digite o id do " + i + "° sabor da pizza: ");
-                imprime_sabores();
+                System.out.println(imprime_sabores());
                 input = scanner.nextLine();
                 sabor = busca_sabor(input);
             }
@@ -89,7 +91,7 @@ public class Menu {
         if (input.equalsIgnoreCase("1")){
             pizza = new PizzaBrotinho(id);
             System.out.println("Digite o id do sabor da pizza: ");
-            imprime_sabores();
+            System.out.println(imprime_sabores());
             input = scanner.nextLine();
             Sabor sabor = busca_sabor(input);
             pizza.adicionarSabor(sabor);
@@ -233,7 +235,7 @@ public class Menu {
 
             // imprime sabores
             else if (input.equalsIgnoreCase("4")){
-                imprime_sabores();
+                System.out.println(imprime_sabores());;
             }
             
             //ver pedidos de uma mesa
