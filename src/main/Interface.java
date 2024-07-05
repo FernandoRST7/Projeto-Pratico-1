@@ -31,6 +31,7 @@ public class Interface extends JFrame {
         JPanel menu1 = criarMenu1();
         JPanel menu2 = criarMenu2();
         JPanel menu4 = criarMenu4();
+        JPanel menu6 = criarMenu6(restaurante);
         JPanel menu7 = criarMenu7(restaurante);
         JPanel menu8 = criarMenu8(restaurante);
         mainPanel.add(painel_inicial, "Menu Inicial");
@@ -38,6 +39,7 @@ public class Interface extends JFrame {
         mainPanel.add(menu2, "Menu 2");
         mainPanel.add(menu4, "Menu 4");
         mainPanel.add(menu7, "Menu 7");
+        mainPanel.add(menu6, "Menu 6");
         mainPanel.add(menu8, "Menu 8");
 
         // Adicionando o painel principal ao JFrame
@@ -77,6 +79,12 @@ public class Interface extends JFrame {
             }
         });
 
+        botaoMenu6.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(mainPanel, "Menu 6");
+            }
+        });
+        
         botaoMenu7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(mainPanel, "Menu 7");
@@ -139,6 +147,24 @@ public class Interface extends JFrame {
         painel.add(botaoVoltar);
         return painel;
     }
+    
+    // Método para criar o Menu 6
+    private JPanel criarMenu6(Restaurante restaurante) {
+    	JPanel painel = new JPanel();
+    	JLabel label = new JLabel("Mostrando as mesas vazias: ");
+    	painel.add(label);
+    	JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+    	
+    	for (int i = 0; i < restaurante.getMesas().length; i++) {
+    		if (!restaurante.getMesas()[i].estaOcupada()) {
+    			//System.out.println("Mesa " + (i + 1) + ";");
+    			painel.add(new JTextArea("Mesa " + (i + 1) + ";"));
+    		}
+    	}
+    	botaoVoltar.addActionListener(new BotaoVoltar());
+    	painel.add(botaoVoltar);
+    	return painel;
+    }
 
     // Método para criar o Menu 7
     private JPanel criarMenu7(Restaurante restaurante) {
@@ -154,6 +180,7 @@ public class Interface extends JFrame {
         return painel;
     }
 
+    
     // Método para criar o Menu 8
     private JPanel criarMenu8(Restaurante restaurante) {
         JPanel painel = new JPanel();
