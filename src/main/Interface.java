@@ -9,9 +9,15 @@ public class Interface extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
-    public Interface() {
+    class BotaoVoltar implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            cardLayout.show(mainPanel, "Menu Inicial");
+        }
+    }
+
+    public Interface(Restaurante restaurante) {
         // Configurações do JFrame
-        setTitle("Exemplo de CardLayout");
+        setTitle("Pizzaria");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -24,9 +30,15 @@ public class Interface extends JFrame {
         JPanel painel_inicial = criarPainelInicial();
         JPanel menu1 = criarMenu1();
         JPanel menu2 = criarMenu2();
+        JPanel menu4 = criarMenu4();
+        JPanel menu7 = criarMenu7(restaurante);
+        JPanel menu8 = criarMenu8(restaurante);
         mainPanel.add(painel_inicial, "Menu Inicial");
         mainPanel.add(menu1, "Menu 1");
         mainPanel.add(menu2, "Menu 2");
+        mainPanel.add(menu4, "Menu 4");
+        mainPanel.add(menu7, "Menu 7");
+        mainPanel.add(menu8, "Menu 8");
 
         // Adicionando o painel principal ao JFrame
         add(mainPanel);
@@ -59,11 +71,21 @@ public class Interface extends JFrame {
             }
         });
 
+        botaoMenu4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(mainPanel, "Menu 4");
+            }
+        });
+
+        botaoMenu7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(mainPanel, "Menu 7");
+            }
+        });
+
         botaoMenu8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Fim do expediente\nImprimindo dados da noite..."); 
-                //imprimir dados do expediente
-                //System.exit(0);
+                cardLayout.show(mainPanel, "Menu 8"); 
             }
         });
 
@@ -84,11 +106,7 @@ public class Interface extends JFrame {
         JLabel label = new JLabel("Este é o Menu 1");
         JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
 
-        botaoVoltar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Menu Inicial");
-            }
-        });
+        botaoVoltar.addActionListener(new BotaoVoltar());
 
         painel.add(label);
         painel.add(botaoVoltar);
@@ -101,19 +119,53 @@ public class Interface extends JFrame {
         JLabel label = new JLabel("Este é o Menu 2");
         JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
 
-        botaoVoltar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Menu Inicial");
-            }
-        });
+        botaoVoltar.addActionListener(new BotaoVoltar());
 
         painel.add(label);
         painel.add(botaoVoltar);
         return painel;
     }
 
+    // Método para criar o Menu 4
+    private JPanel criarMenu4() {
+        JPanel painel = new JPanel();
+        JLabel label = new JLabel("Mostrando sabores das pizzas: ");
+        JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+
+        botaoVoltar.addActionListener(new BotaoVoltar());
+
+        painel.add(label);
+        painel.add(new JTextArea(Menu.imprime_sabores()));
+        painel.add(botaoVoltar);
+        return painel;
+    }
+
+    // Método para criar o Menu 7
+    private JPanel criarMenu7(Restaurante restaurante) {
+        JPanel painel = new JPanel();
+        JLabel label = new JLabel("Mostrando os pedidos em ordem de prioridade: ");
+        JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+
+        botaoVoltar.addActionListener(new BotaoVoltar());
+
+        painel.add(label);
+        painel.add(new JTextArea(restaurante.printaPedidos()));
+        painel.add(botaoVoltar);
+        return painel;
+    }
+
+    // Método para criar o Menu 8
+    private JPanel criarMenu8(Restaurante restaurante) {
+        JPanel painel = new JPanel();
+        JLabel label = new JLabel("Fim do expediente.");
+        painel.add(label);
+        painel.add(new JTextArea("Imprimindo os dados da noite..."));
+        painel.add(new JTextArea(restaurante.imprimeDados()));
+        return painel;
+    }
+
     public static void main(String[] args) {
-        // Criando uma instância do JFrame
-        new Interface();
+        Restaurante restaurante = new Restaurante();
+        new Interface(restaurante);
     }
 }

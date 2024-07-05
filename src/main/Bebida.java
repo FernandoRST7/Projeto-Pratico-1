@@ -2,10 +2,10 @@ package main;
 
 public class Bebida extends Pedido {
 	private String nome;
-	private int preco;
+	private float preco;
 	
 	//construtor
-	public Bebida(int idMesa, String nome, int preco) {
+	public Bebida(int idMesa, String nome, float preco) {
 		super(idMesa);
 		
 		this.nome = nome;
@@ -17,7 +17,7 @@ public class Bebida extends Pedido {
 		return nome;
 	}
 	
-	public int getPreco() {
+	public float getPreco() {
 		return preco;
 	}
 	
