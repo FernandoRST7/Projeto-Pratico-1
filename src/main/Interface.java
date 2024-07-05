@@ -1,14 +1,24 @@
 package main;
 
 import javax.swing.*;
+
+import pizzas.Pizza;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class Interface extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
+    public class SystemError extends Exception {
+    	  public SystemError(String message) {
+    	    super(message);
+    	  }
+    	}
+    
     class BotaoVoltar implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             cardLayout.show(mainPanel, "Menu Inicial");
@@ -28,12 +38,65 @@ public class Interface extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
-            id = campo.getText(); // OBS.: AQUI NAO TO CUIDANDO DE EXCECOES!!!
-            int idi = Integer.parseInt(id); // transformando id em int
-            restaurante.getMesas()[idi-1].ocuparMesa(); 
-            restaurante.adicionaCliente();
-            painel.add(new TextArea("Mesa " + id + " foi ocupada.")); // aqui nao ta printando n sei pq
-            cardLayout.show(mainPanel, "Menu Inicial");
+        	int idi = 0;
+            	try {
+            		
+    	        	id = campo.getText(); // OBS.: AQUI NAO TO CUIDANDO DE EXCECOES!!!
+		            idi = Integer.parseInt(id); // transformando id em int
+		            
+		            if (restaurante.getMesas()[idi-1].estaOcupada()) throw new SystemError("Mesa Ocupada");
+		            
+		            restaurante.getMesas()[idi-1].ocuparMesa(); 
+		            restaurante.adicionaCliente();
+		            TextArea txt = new TextArea("Mesa " + id + " foi ocupada.");
+		            txt.setMinimumSize(new Dimension(150, 40)); // Set minimum size
+		            txt.setPreferredSize(new Dimension(150, 40)); // Set preferred size
+		            txt.setSize(new Dimension(150, 40));
+			        painel.add(txt); // aqui nao ta printando n sei pq
+			        cardLayout.show(mainPanel, "Menu Inicial");
+    	        	
+    	        } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+    	        	mensagemDeErro("Digite um número de 1 a 50.");
+    	        } catch (SystemError ex) {
+    	        	mensagemDeErro("Mesa já ocupada.");
+    	        }
+        }
+    }
+    
+    class BotaoCriarPizza implements ActionListener {
+
+        private JComboBox<String> tamanhoBox;
+        private JCheckBox[] saborCheckBoxes;
+        private JTextField campoIdMesa;
+        private Pizza pizza;
+
+        BotaoCriarPizza(JComboBox<String> tamanhoBox, JCheckBox[] saborCheckBoxes, JTextField campoIdMesa) {
+            this.tamanhoBox = tamanhoBox;
+            this.saborCheckBoxes = saborCheckBoxes;
+            this.campoIdMesa = campoIdMesa;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            int idMesa = Integer.parseInt(campoIdMesa.getText());
+            int tamanho = tamanhoBox.getSelectedIndex();
+            List<String> sabores = Arrays.asList(getSelectedSabores());
+            JOptionPane.showMessageDialog(null, "id " + idMesa);
+            JOptionPane.showMessageDialog(null, "tamanho " + tamanho);
+            //pizza = new Pizza(tamanho, sabores);
+            //JOptionPane.showMessageDialog(null, "Pizza criada: " + pizza);
+        }
+
+        private String[] getSelectedSabores() {
+            return Arrays.stream(saborCheckBoxes)
+                    .filter(JCheckBox::isSelected)
+                    .map(JCheckBox::getText)
+                    .toArray(String[]::new);
+        }
+
+        public Pizza getPizza() {
+            return pizza;
         }
     }
 
@@ -51,7 +114,7 @@ public class Interface extends JFrame {
         // Adicionando os painéis ao CardLayout
         JPanel painel_inicial = criarPainelInicial(restaurante);
         JPanel menu1 = criarMenu1(restaurante);
-        JPanel menu2 = criarMenu2();
+        JPanel menu2 = criarMenu2(restaurante);
         JPanel menu4 = criarMenu4();
         JPanel menu6 = criarMenu6(restaurante);
         JPanel menu7 = criarMenu7(restaurante);
@@ -135,6 +198,35 @@ public class Interface extends JFrame {
         painel.add(botaoMenu8);
         return painel;
     }
+    
+    private static void mensagemDeErro(String mensagem) {
+    	/*Abre um JFrame com a mensagem passada no argumento e um botão que quando clicado fecha o JFrame.*/
+    	JFrame errorFrame = new JFrame("Erro");
+        errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close on button click or window close
+        errorFrame.setMinimumSize(new Dimension(300, 100));
+        errorFrame.setSize(300, 100);
+        //errorFrame.pack();
+        errorFrame.setLocationRelativeTo(null);
+        
+        JLabel errorMessageLabel = new JLabel(mensagem);
+        errorMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                errorFrame.dispose(); // Fecha o JFrame de  erro
+            }
+        });
+
+        JPanel errorPanel = new JPanel();
+        errorPanel.add(errorMessageLabel);
+        errorPanel.add(closeButton);
+
+        errorFrame.add(errorPanel);
+        errorFrame.pack();
+        errorFrame.setVisible(true);
+    }
 
     // Método para criar o Menu 1
     private JPanel criarMenu1(Restaurante restaurante) {
@@ -142,6 +234,10 @@ public class Interface extends JFrame {
         JLabel label = new JLabel("Registrando o cliente: ");
         JLabel label2 = new JLabel("Digite o id da mesa.");
         JTextField campo = new JTextField(10);
+        
+        
+        
+        
         JButton botaoConfirmar = new JButton("Confirme o id");
         BotaoConfirmarId confirmar = new BotaoConfirmarId(campo, restaurante, painel);
 
@@ -159,16 +255,50 @@ public class Interface extends JFrame {
         return painel;
     }
 
-    // Método para criar o Menu 2
-    private JPanel criarMenu2() {
+    private JPanel criarMenu2(Restaurante restaurante) {
         JPanel painel = new JPanel();
-        JLabel label = new JLabel("Este é o Menu 2");
+
+        String[] tamanhos = {"Brotinho", "Média", "Grande", "Familia"};
+        String[] sabores = {"Calabresa", "Mussarela", "Portuguesa", "Alcaparras", "Quatro queijos"};
+
+        JComboBox<String> tamanhoBox = new JComboBox<>(tamanhos);
+        JCheckBox[] saborCheckBoxes = new JCheckBox[sabores.length];
+        for (int i = 0; i < sabores.length; i++) {
+            saborCheckBoxes[i] = new JCheckBox(sabores[i]);
+        }
+        JButton botaoCriarPizza = new JButton("Criar Pizza");
+
+        // Campo para confirmar o id do pedido
+        JLabel labelMesa = new JLabel("Digite o ID da mesa: ");
+        JTextField campoIdMesa = new JTextField(10);
+
+        painel.add(labelMesa);
+        painel.add(campoIdMesa);
+
+        BotaoCriarPizza botaoCriarPizzaListener = new BotaoCriarPizza(tamanhoBox, saborCheckBoxes, campoIdMesa);
+        botaoCriarPizza.addActionListener(botaoCriarPizzaListener);
+
+        painel.add(new JLabel("Selecione o tamanho:"));
+        painel.add(tamanhoBox);
+        painel.add(new JLabel("Selecione os sabores:"));
+        for (JCheckBox checkBox : saborCheckBoxes) {
+            painel.add(checkBox);
+        }
+        painel.add(botaoCriarPizza);
+
+        // Campo para voltar para o menu inicial
         JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
-
         botaoVoltar.addActionListener(new BotaoVoltar());
-
-        painel.add(label);
         painel.add(botaoVoltar);
+
+        // Exemplo de uso do método getPizza
+        botaoCriarPizza.addActionListener(e -> {
+            Pizza pizza = botaoCriarPizzaListener.getPizza();
+            if (pizza != null) {
+                System.out.println("Pizza criada: " + pizza);
+            }
+        });
+
         return painel;
     }
 
