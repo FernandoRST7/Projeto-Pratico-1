@@ -33,6 +33,7 @@ public class Interface extends JFrame {
             restaurante.getMesas()[idi-1].ocuparMesa(); 
             restaurante.adicionaCliente();
             painel.add(new TextArea("Mesa " + id + " foi ocupada.")); // aqui nao ta printando n sei pq
+            cardLayout.show(mainPanel, "Menu Inicial");
         }
     }
 
@@ -48,19 +49,22 @@ public class Interface extends JFrame {
         mainPanel = new JPanel(cardLayout);
 
         // Adicionando os painéis ao CardLayout
-        JPanel painel_inicial = criarPainelInicial();
+        JPanel painel_inicial = criarPainelInicial(restaurante);
         JPanel menu1 = criarMenu1(restaurante);
         JPanel menu2 = criarMenu2();
         JPanel menu4 = criarMenu4();
         JPanel menu6 = criarMenu6(restaurante);
         JPanel menu7 = criarMenu7(restaurante);
         JPanel menu8 = criarMenu8(restaurante);
-        mainPanel.add(painel_inicial, "Menu Inicial");
-        mainPanel.add(menu1, "Menu 1");
-        mainPanel.add(menu2, "Menu 2");
-        mainPanel.add(menu4, "Menu 4");
-        mainPanel.add(menu7, "Menu 7");
-        mainPanel.add(menu6, "Menu 6");
+        /*O numeros comentados servem para poder acessar os paineis adicionados no mainPanel.
+         * como em "botaoMenu6.addActionListener", ent se adicionar novos componentes no mainPanel tem q atualizar 
+         * os lugares onde usa esses indices.*/
+        mainPanel.add(painel_inicial, "Menu Inicial"); //0
+        mainPanel.add(menu1, "Menu 1"); //1
+        mainPanel.add(menu2, "Menu 2"); //2
+        mainPanel.add(menu4, "Menu 4"); //3
+        mainPanel.add(menu6, "Menu 6"); //4
+        mainPanel.add(menu7, "Menu 7");	
         mainPanel.add(menu8, "Menu 8");
 
         // Adicionando o painel principal ao JFrame
@@ -71,7 +75,7 @@ public class Interface extends JFrame {
     }
 
     // Método para criar o painel inicial
-    private JPanel criarPainelInicial() {
+    private JPanel criarPainelInicial(Restaurante restaurante) {
         JPanel painel = new JPanel();
         JButton botaoMenu1 = new JButton("Registrar novo cliente");
         JButton botaoMenu2 = new JButton("Pedir Pizza");
@@ -102,6 +106,9 @@ public class Interface extends JFrame {
 
         botaoMenu6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	JPanel menu6 = (JPanel) mainPanel.getComponent(4);
+
+            	atualizaMenu6(menu6, restaurante);
                 cardLayout.show(mainPanel, "Menu 6");
             }
         });
@@ -132,9 +139,9 @@ public class Interface extends JFrame {
     // Método para criar o Menu 1
     private JPanel criarMenu1(Restaurante restaurante) {
         JPanel painel = new JPanel();
-        JLabel label = new JLabel("Registrando o cliente");
-
-        JTextField campo = new JTextField("Digite o id da mesa");
+        JLabel label = new JLabel("Registrando o cliente: ");
+        JLabel label2 = new JLabel("Digite o id da mesa.");
+        JTextField campo = new JTextField(10);
         JButton botaoConfirmar = new JButton("Confirme o id");
         BotaoConfirmarId confirmar = new BotaoConfirmarId(campo, restaurante, painel);
 
@@ -145,6 +152,7 @@ public class Interface extends JFrame {
         botaoVoltar.addActionListener(new BotaoVoltar());
 
         painel.add(label);
+        painel.add(label2);
         painel.add(campo);
         painel.add(botaoConfirmar);
         painel.add(botaoVoltar);
@@ -180,20 +188,30 @@ public class Interface extends JFrame {
     
     // Método para criar o Menu 6
     private JPanel criarMenu6(Restaurante restaurante) {
-    	JPanel painel = new JPanel();
-    	JLabel label = new JLabel("Mostrando as mesas vazias: ");
-    	painel.add(label);
+    	JPanel painel = new JPanel();  	
     	JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+
+    	botaoVoltar.addActionListener(new BotaoVoltar());
+    	painel.add(botaoVoltar);
+    	return painel;
+    }
+    
+    private static void atualizaMenu6(JPanel menu6, Restaurante restaurante) {
+    	for (Component component : menu6.getComponents()) {
+    	    if (component instanceof JLabel | component instanceof JTextArea) {
+    	        menu6.remove(component);
+    	    }
+    	}
+    	
+    	JLabel label = new JLabel("Mostrando as mesas vazias: ");
+    	menu6.add(label);
     	
     	for (int i = 0; i < restaurante.getMesas().length; i++) {
     		if (!restaurante.getMesas()[i].estaOcupada()) {
     			//System.out.println("Mesa " + (i + 1) + ";");
-    			painel.add(new JTextArea("Mesa " + (i + 1) + ";"));
+    			menu6.add(new JTextArea("Mesa " + (i + 1) + ";"));
     		}
     	}
-    	botaoVoltar.addActionListener(new BotaoVoltar());
-    	painel.add(botaoVoltar);
-    	return painel;
     }
 
     // Método para criar o Menu 7
