@@ -9,6 +9,12 @@ public class Interface extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
+    public class SystemError extends Exception {
+    	  public SystemError(String message) {
+    	    super(message);
+    	  }
+    	}
+    
     class BotaoVoltar implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             cardLayout.show(mainPanel, "Menu Inicial");
@@ -28,12 +34,30 @@ public class Interface extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
-            id = campo.getText(); // OBS.: AQUI NAO TO CUIDANDO DE EXCECOES!!!
-            int idi = Integer.parseInt(id); // transformando id em int
-            restaurante.getMesas()[idi-1].ocuparMesa(); 
-            restaurante.adicionaCliente();
-            painel.add(new TextArea("Mesa " + id + " foi ocupada.")); // aqui nao ta printando n sei pq
-            cardLayout.show(mainPanel, "Menu Inicial");
+        	
+        	int idi = 0;
+        	  
+            	try {
+            		
+    	        	id = campo.getText(); // OBS.: AQUI NAO TO CUIDANDO DE EXCECOES!!!
+		            idi = Integer.parseInt(id); // transformando id em int
+		            
+		            if (restaurante.getMesas()[idi-1].estaOcupada()) throw new SystemError("Mesa Ocupada");
+		            
+		            restaurante.getMesas()[idi-1].ocuparMesa(); 
+		            restaurante.adicionaCliente();
+		            TextArea txt = new TextArea("Mesa " + id + " foi ocupada.");
+		            txt.setMinimumSize(new Dimension(150, 40)); // Set minimum size
+		            txt.setPreferredSize(new Dimension(150, 40)); // Set preferred size
+		            txt.setSize(new Dimension(150, 40));
+			        painel.add(txt); // aqui nao ta printando n sei pq
+			        cardLayout.show(mainPanel, "Menu Inicial");
+    	        	
+    	        } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+    	        	mensagemDeErro("Digite um número de 1 a 50.");
+    	        } catch (SystemError ex) {
+    	        	mensagemDeErro("Mesa já ocupada.");
+    	        }
         }
     }
 
@@ -135,6 +159,35 @@ public class Interface extends JFrame {
         painel.add(botaoMenu8);
         return painel;
     }
+    
+    private static void mensagemDeErro(String mensagem) {
+    	/*Abre um JFrame com a mensagem passada no argumento e um botão que quando clicado fecha o JFrame.*/
+    	JFrame errorFrame = new JFrame("Erro");
+        errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close on button click or window close
+        errorFrame.setMinimumSize(new Dimension(300, 100));
+        errorFrame.setSize(300, 100);
+        //errorFrame.pack();
+        errorFrame.setLocationRelativeTo(null);
+        
+        JLabel errorMessageLabel = new JLabel(mensagem);
+        errorMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                errorFrame.dispose(); // Fecha o JFrame de  erro
+            }
+        });
+
+        JPanel errorPanel = new JPanel();
+        errorPanel.add(errorMessageLabel);
+        errorPanel.add(closeButton);
+
+        errorFrame.add(errorPanel);
+        errorFrame.pack();
+        errorFrame.setVisible(true);
+    }
 
     // Método para criar o Menu 1
     private JPanel criarMenu1(Restaurante restaurante) {
@@ -142,6 +195,10 @@ public class Interface extends JFrame {
         JLabel label = new JLabel("Registrando o cliente: ");
         JLabel label2 = new JLabel("Digite o id da mesa.");
         JTextField campo = new JTextField(10);
+        
+        
+        
+        
         JButton botaoConfirmar = new JButton("Confirme o id");
         BotaoConfirmarId confirmar = new BotaoConfirmarId(campo, restaurante, painel);
 
