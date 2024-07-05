@@ -15,6 +15,27 @@ public class Interface extends JFrame {
         }
     }
 
+    class BotaoConfirmarId implements ActionListener{
+        private JTextField campo;
+        private Restaurante restaurante;
+        private String id;
+        private JPanel painel;
+
+        BotaoConfirmarId(JTextField campo, Restaurante restaurante, JPanel painel){
+            this.campo = campo;
+            this.restaurante = restaurante;
+            this.painel = painel;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            id = campo.getText(); // OBS.: AQUI NAO TO CUIDANDO DE EXCECOES!!!
+            int idi = Integer.parseInt(id); // transformando id em int
+            restaurante.getMesas()[idi-1].ocuparMesa(); 
+            restaurante.adicionaCliente();
+            painel.add(new TextArea("Mesa " + id + " foi ocupada.")); // aqui nao ta printando n sei pq
+        }
+    }
+
     public Interface(Restaurante restaurante) {
         // Configurações do JFrame
         setTitle("Pizzaria");
@@ -28,7 +49,7 @@ public class Interface extends JFrame {
 
         // Adicionando os painéis ao CardLayout
         JPanel painel_inicial = criarPainelInicial();
-        JPanel menu1 = criarMenu1();
+        JPanel menu1 = criarMenu1(restaurante);
         JPanel menu2 = criarMenu2();
         JPanel menu4 = criarMenu4();
         JPanel menu6 = criarMenu6(restaurante);
@@ -109,14 +130,23 @@ public class Interface extends JFrame {
     }
 
     // Método para criar o Menu 1
-    private JPanel criarMenu1() {
+    private JPanel criarMenu1(Restaurante restaurante) {
         JPanel painel = new JPanel();
-        JLabel label = new JLabel("Este é o Menu 1");
-        JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+        JLabel label = new JLabel("Registrando o cliente");
 
+        JTextField campo = new JTextField("Digite o id da mesa");
+        JButton botaoConfirmar = new JButton("Confirme o id");
+        BotaoConfirmarId confirmar = new BotaoConfirmarId(campo, restaurante, painel);
+
+        botaoConfirmar.addActionListener(confirmar);
+
+
+        JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
         botaoVoltar.addActionListener(new BotaoVoltar());
 
         painel.add(label);
+        painel.add(campo);
+        painel.add(botaoConfirmar);
         painel.add(botaoVoltar);
         return painel;
     }
