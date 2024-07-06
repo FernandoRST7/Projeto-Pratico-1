@@ -49,7 +49,7 @@ public class Interface extends JFrame {
         	int idi = 0;
             	try {
             		
-    	        	id = campo.getText(); // OBS.: AQUI NAO TO CUIDANDO DE EXCECOES!!!
+    	        	id = campo.getText(); 
 		            idi = Integer.parseInt(id); // transformando id em int
 		            
 		            if (restaurante.getMesas()[idi - 1].estaOcupada()) throw new SystemError("Mesa Ocupada");
@@ -84,7 +84,7 @@ public class Interface extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            int idMesa = Integer.parseInt(campoIdMesa.getText());
+            int idMesa = Integer.parseInt(campoIdMesa.getText()); // fazer try catch aqui tb
             int tamanho = tamanhoBox.getSelectedIndex();
             List<String> sabores = Arrays.asList(getSelectedSabores());
             JOptionPane.showMessageDialog(null, "id " + idMesa);
@@ -129,6 +129,7 @@ public class Interface extends JFrame {
 	            
 	
 	            else {
+                    restaurante.adicionaDinheiro(bebida.getPreco());
 	                frameMensagem(bebida.getNome() + " foi pedido(a) para a mesa " + idMesa, "Confirmação");
 	            }
 	            restaurante.salvaLog("Mesa" + idMesa + " pediu uma bebida: " + bebida.getNome() + ", R$: " + bebida.getPreco());
@@ -144,9 +145,6 @@ public class Interface extends JFrame {
     	
     }
 		
-
-    
-
     class BotaoVerPedidos implements ActionListener {
 
 		private JTextField campoIdMesa;
@@ -159,13 +157,17 @@ public class Interface extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-            int idMesa = Integer.parseInt(campoIdMesa.getText());
-
-            if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) {
-            	frameMensagem("Digite o id de uma mesa ocupada.", "Erro");
-            } else {
-
-            	frameMensagem(restaurante.getMesas()[idMesa - 1].toString(), "Pedidos mesa " + idMesa);
+            try{
+                int idMesa = Integer.parseInt(campoIdMesa.getText());
+    
+                if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) throw new SystemError("Mesa desocupada.");
+                else {
+                    frameMensagem(restaurante.getMesas()[idMesa - 1].toString(), "Pedidos mesa " + idMesa);
+                }
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+	        	frameMensagem("Digite um número de 1 a 50.", "Erro");
+	        } catch(SystemError ex){
+                frameMensagem(ex.getMessage() + " Digite o id de uma mesa ocupada.", "Erro");
             }
 		}
     }
@@ -265,6 +267,8 @@ public class Interface extends JFrame {
         
         botaoMenu7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                JPanel menu7 = (JPanel) mainPanel.getComponent(7);
+                atualizaMenu7(menu7, restaurante);
                 cardLayout.show(mainPanel, "Menu 7");
             }
         });
@@ -291,10 +295,9 @@ public class Interface extends JFrame {
     private static void frameMensagem(String mensagem, String titulo) {
     	/*Abre um JFrame com a mensagem passada no argumento e um botão que quando clicado fecha o JFrame.*/
     	JFrame errorFrame = new JFrame(titulo);
-        errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close on button click or window close
-        errorFrame.setMinimumSize(new Dimension(300, 100));
-        errorFrame.setSize(300, 100);
-        //errorFrame.pack();
+        errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        errorFrame.setMinimumSize(new Dimension(400, 150));
+        errorFrame.setSize(400, 150);
         errorFrame.setLocationRelativeTo(null);
         
         JLabel errorMessageLabel = new JLabel(mensagem);
@@ -304,7 +307,7 @@ public class Interface extends JFrame {
         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                errorFrame.dispose(); // Fecha o JFrame de  erro
+                errorFrame.dispose(); // Fecha o JFrame de erro
             }
         });
 
@@ -317,7 +320,7 @@ public class Interface extends JFrame {
         errorFrame.setVisible(true);
     }
 
-    // Método para criar o Menu 1
+    // menu registra cliente
     private JPanel criarMenu1(Restaurante restaurante) {
         JPanel painel = new JPanel();
         JLabel label = new JLabel("Registrando o cliente: ");
@@ -339,6 +342,7 @@ public class Interface extends JFrame {
         return painel;
     }
 
+    // menu pizzas
     private JPanel criarMenu2(Restaurante restaurante) {
         JPanel painel = new JPanel();
 
@@ -386,7 +390,7 @@ public class Interface extends JFrame {
         return painel;
     }
     
-  //menu bebida
+    // menu bebida
     private JPanel criarMenu3(Restaurante restaurante) {
         JPanel painel = new JPanel();
 
@@ -430,7 +434,7 @@ public class Interface extends JFrame {
         return painel;
     }
 
-    // Método para criar o Menu 4
+    // menu sabores de pizza
     private JPanel criarMenu4() {
         JPanel painel = new JPanel();
         JLabel label = new JLabel("Mostrando sabores das pizzas: ");
@@ -444,7 +448,7 @@ public class Interface extends JFrame {
         return painel;
     }
     
-  //menu ver pedidos de uma mesa
+    // menu ver pedidos de uma mesa
     private JPanel criarMenu5(Restaurante restaurante) {
     	JPanel painel = new JPanel();
 
@@ -470,7 +474,7 @@ public class Interface extends JFrame {
     	return painel;
     }
     
-    // Método para criar o Menu 6
+    // menu mesas vazias
     private JPanel criarMenu6(Restaurante restaurante) {
     	JPanel painel = new JPanel();  	
     	JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
@@ -498,7 +502,7 @@ public class Interface extends JFrame {
     	}
     }
 
-    // Método para criar o Menu 7
+    // menu pedidos em ordem
     private JPanel criarMenu7(Restaurante restaurante) {
         JPanel painel = new JPanel();
         JLabel label = new JLabel("Mostrando os pedidos em ordem de prioridade: ");
@@ -507,19 +511,26 @@ public class Interface extends JFrame {
         botaoVoltar.addActionListener(new BotaoVoltar());
 
         painel.add(label);
-        painel.add(new JTextArea(restaurante.printaPedidos()));
         painel.add(botaoVoltar);
         return painel;
     }
 
-    
- // Método para criar o Menu 8
+    private static void atualizaMenu7(JPanel menu7, Restaurante restaurante){
+        TextArea pedidos = new TextArea(restaurante.printaPedidos());
+        pedidos.setMinimumSize(new Dimension(150, 40)); // Set minimum size
+        pedidos.setEditable(false); // Desabilita a edição manual do texto
+        try{
+            menu7.remove(2); // remove a caixa de texto de pedidos anterior (não faz nada se não tiver caixa de texto)
+        } catch(Exception e){}
+        menu7.add(pedidos);
+    }
+
+    // menu fim do expediente
     private JPanel criarMenu8(Restaurante restaurante) {
         JPanel painel = new JPanel();
         JLabel label = new JLabel("Fim do expediente.");
         painel.add(label);
         painel.add(new JTextArea("Imprimindo os dados da noite..."));
-        painel.add(new JTextArea(restaurante.imprimeDados()));
         
         JButton fechar = new JButton("Fechar");
         fechar.addActionListener(new ActionListener() {
@@ -535,9 +546,14 @@ public class Interface extends JFrame {
     
     private static void atualizaMenu8(JPanel menu8, Restaurante restaurante) {
     	
-    	TextArea caixaTexto = new TextArea("Registro:");
-        caixaTexto.setMinimumSize(new Dimension(150, 40)); // Set minimum size
+        TextArea caixaTexto = new TextArea("Registro:");
+        caixaTexto.setMinimumSize(new Dimension(150, 40));
         caixaTexto.setEditable(false); // Desabilita a edição manual do texto
+        
+        TextArea dados = new TextArea(restaurante.imprimeDados());
+        dados.setMinimumSize(new Dimension(150, 40));
+        dados.setEditable(false); // Desabilita a edição manual do texto
+        menu8.add(dados);
 
         // Definindo outras propriedades opcionais (tamanho, fonte, etc.)
         caixaTexto.setPreferredSize(new Dimension(300, 200)); // Tamanho inicial
