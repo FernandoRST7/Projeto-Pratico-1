@@ -7,6 +7,9 @@ import pizzas.Pizza;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
@@ -36,12 +39,10 @@ public class Interface extends JFrame {
         private JTextField campo;
         private Restaurante restaurante;
         private String id;
-        private JPanel painel;
 
-        BotaoConfirmarId(JTextField campo, Restaurante restaurante, JPanel painel) {
+        BotaoConfirmarId(JTextField campo, Restaurante restaurante, JPanel painel){
             this.campo = campo;
             this.restaurante = restaurante;
-            this.painel = painel;
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -56,6 +57,8 @@ public class Interface extends JFrame {
 		            restaurante.getMesas()[idi - 1].ocuparMesa(); 
 		            restaurante.adicionaCliente();
 		            frameMensagem("Mesa " + idi + " foi ocupada.", "Confirmação");
+			        
+			        restaurante.salvaLog("Mesa" + idi + " ocupada.");
     	        	
     	        } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
     	        	frameMensagem("Digite um número de 1 a 50.", "Erro");
@@ -107,41 +110,50 @@ public class Interface extends JFrame {
 		private static final long serialVersionUID = 1L;
 		private JTextField campoIdMesa;
         private Bebida bebida;
-        private JPanel painel;
         private Restaurante restaurante;
         
         BotaoCriarBebida(JTextField campoIdMesa, JPanel painel, Restaurante restaurante) {
             this.campoIdMesa = campoIdMesa;
-            this.painel = painel;
             this.restaurante = restaurante;
         }
 
     	
 		@Override
 		public void actionPerformed(ActionEvent e) {
-            int idMesa = Integer.parseInt(campoIdMesa.getText());
-            bebida = new Bebida((idMesa - 1), this.getText());
-            
-            if (!restaurante.addPedido(bebida)) {
-            	frameMensagem("Digite o id de uma mesa ocupada.", "Erro");
-            }
-            
-            else {
-                frameMensagem(bebida.getNome() + " foi pedido(a) para a mesa " + idMesa, "Confirmação");
-            }
+			int idMesa = 0;
+			try {
+				idMesa = Integer.parseInt(campoIdMesa.getText());
+	            bebida = new Bebida((idMesa - 1), this.getText());
+	            
+	            if (!restaurante.addPedido(bebida)) throw new SystemError("Mesa desocupada.");
+	            
+	
+	            else {
+	                frameMensagem(bebida.getNome() + " foi pedido(a) para a mesa " + idMesa, "Confirmação");
+	            }
+	            restaurante.salvaLog("Mesa" + idMesa + " pediu uma bebida: " + bebida.getNome() + ", R$: " + bebida.getPreco());
+	            
+		        cardLayout.show(mainPanel, "Menu Inicial");
+			} catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+	        	frameMensagem("Digite um número de 1 a 50.", "Erro");
+	        } catch (SystemError ex) {
+	        	frameMensagem(ex.getMessage() + " Digite o id de uma mesa ocupada.", "Erro");
+	        }
+	            
 		}
     	
     }
+		
+
     
+
     class BotaoVerPedidos implements ActionListener {
-    	
+
 		private JTextField campoIdMesa;
-        private JPanel painel;
         private Restaurante restaurante;
-    	
+
     	BotaoVerPedidos(JTextField campoIdMesa, JPanel painel, Restaurante restaurante) {
             this.campoIdMesa = campoIdMesa;
-            this.painel = painel;
             this.restaurante = restaurante;
     	}
 
@@ -151,15 +163,14 @@ public class Interface extends JFrame {
 
             if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) {
             	frameMensagem("Digite o id de uma mesa ocupada.", "Erro");
-            }
-            
-            else {
-            	
+            } else {
+
             	frameMensagem(restaurante.getMesas()[idMesa - 1].toString(), "Pedidos mesa " + idMesa);
             }
 		}
-    	
     }
+	        
+	        
 
     public Interface(Restaurante restaurante) {
         // Configurações do JFrame
@@ -177,8 +188,8 @@ public class Interface extends JFrame {
         JPanel menu1 = criarMenu1(restaurante);
         JPanel menu2 = criarMenu2(restaurante);
         JPanel menu3 = criarMenu3(restaurante);
-        JPanel menu4 = criarMenu4();
         JPanel menu5 = criarMenu5(restaurante);
+        JPanel menu4 = criarMenu4();
         JPanel menu6 = criarMenu6(restaurante);
         JPanel menu7 = criarMenu7(restaurante);
         JPanel menu8 = criarMenu8(restaurante);
@@ -192,8 +203,8 @@ public class Interface extends JFrame {
         mainPanel.add(menu4, "Menu 4"); //4
         mainPanel.add(menu5, "Menu 5"); //5
         mainPanel.add(menu6, "Menu 6"); //6
-        mainPanel.add(menu7, "Menu 7");	
-        mainPanel.add(menu8, "Menu 8");
+        mainPanel.add(menu7, "Menu 7");	//7
+        mainPanel.add(menu8, "Menu 8"); //8
 
         // Adicionando o painel principal ao JFrame
         add(mainPanel);
@@ -246,8 +257,7 @@ public class Interface extends JFrame {
 
         botaoMenu6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	JPanel menu6 = (JPanel) mainPanel.getComponent(6); //tem que ficar corrigindo esse valor do getComponent aqui toda a vez que alterar lá em cima
-
+            	JPanel menu6 = (JPanel) mainPanel.getComponent(6);
             	atualizaMenu6(menu6, restaurante);
                 cardLayout.show(mainPanel, "Menu 6");
             }
@@ -261,6 +271,8 @@ public class Interface extends JFrame {
 
         botaoMenu8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	JPanel menu8 = (JPanel) mainPanel.getComponent(8);
+            	atualizaMenu8(menu8, restaurante);
                 cardLayout.show(mainPanel, "Menu 8"); 
             }
         });
@@ -311,15 +323,10 @@ public class Interface extends JFrame {
         JLabel label = new JLabel("Registrando o cliente: ");
         JLabel label2 = new JLabel("Digite o id da mesa.");
         JTextField campo = new JTextField(10);
-        
-        
-        
-        
         JButton botaoConfirmar = new JButton("Confirme o id");
         BotaoConfirmarId confirmar = new BotaoConfirmarId(campo, restaurante, painel);
 
         botaoConfirmar.addActionListener(confirmar);
-
 
         JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
         botaoVoltar.addActionListener(new BotaoVoltar());
@@ -379,7 +386,7 @@ public class Interface extends JFrame {
         return painel;
     }
     
-    //menu bebida
+  //menu bebida
     private JPanel criarMenu3(Restaurante restaurante) {
         JPanel painel = new JPanel();
 
@@ -437,29 +444,29 @@ public class Interface extends JFrame {
         return painel;
     }
     
-    //menu ver pedidos de uma mesa
+  //menu ver pedidos de uma mesa
     private JPanel criarMenu5(Restaurante restaurante) {
     	JPanel painel = new JPanel();
-    	
+
         // Campo para confirmar o id da mesa
         JLabel labelMesa = new JLabel("Digite o ID da mesa: ");
         JTextField campoIdMesa = new JTextField(10);
-        
+
         painel.add(labelMesa);
         painel.add(campoIdMesa);
-        
+
         BotaoVerPedidos pedidosListener = new BotaoVerPedidos(campoIdMesa, painel, restaurante);
         JButton botaoPedidos = new JButton("Ver pedidos");
-        
+
         botaoPedidos.addActionListener(pedidosListener);
         painel.add(botaoPedidos);
-    	
-        
+
+
         // Campo para voltar para o menu inicial
         JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
         botaoVoltar.addActionListener(new BotaoVoltar());
         painel.add(botaoVoltar);
-        
+
     	return painel;
     }
     
@@ -467,8 +474,6 @@ public class Interface extends JFrame {
     private JPanel criarMenu6(Restaurante restaurante) {
     	JPanel painel = new JPanel();  	
     	JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
-    	
-    	//atualizaMenu6(painel, restaurante);
 
     	botaoVoltar.addActionListener(new BotaoVoltar());
     	painel.add(botaoVoltar);
@@ -508,14 +513,54 @@ public class Interface extends JFrame {
     }
 
     
-    // Método para criar o Menu 8
+ // Método para criar o Menu 8
     private JPanel criarMenu8(Restaurante restaurante) {
         JPanel painel = new JPanel();
         JLabel label = new JLabel("Fim do expediente.");
         painel.add(label);
         painel.add(new JTextArea("Imprimindo os dados da noite..."));
         painel.add(new JTextArea(restaurante.imprimeDados()));
+        
+        JButton fechar = new JButton("Fechar");
+        fechar.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		//fechar tudo
+        		System.exit(0);
+        	}
+        });
+        painel.add(fechar);
         return painel;
+    }
+    
+    private static void atualizaMenu8(JPanel menu8, Restaurante restaurante) {
+    	
+    	TextArea caixaTexto = new TextArea("Registro:");
+        caixaTexto.setMinimumSize(new Dimension(150, 40)); // Set minimum size
+        caixaTexto.setEditable(false); // Desabilita a edição manual do texto
+
+        // Definindo outras propriedades opcionais (tamanho, fonte, etc.)
+        caixaTexto.setPreferredSize(new Dimension(300, 200)); // Tamanho inicial
+        menu8.add(caixaTexto);
+        
+    	try {
+            // Criando o leitor de arquivos
+            BufferedReader leitor = new BufferedReader(new FileReader(restaurante.getNomeRegistro()));
+
+            String linha;
+            // Lendo o arquivo linha por linha
+            while ((linha = leitor.readLine()) != null) {
+                // Adicionando a linha à caixa de texto com quebra de linha
+                caixaTexto.append(linha + "\n");
+            }
+
+            // Fechando o leitor de arquivos
+            leitor.close();
+        } catch (IOException e) {
+            // Tratamento de erros de leitura do arquivo
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao ler o arquivo: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {

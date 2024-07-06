@@ -1,12 +1,20 @@
 package main;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Formatter;
+
 
 public class Restaurante {
 	private ArrayList<Pedido> pedidos;
 	private Mesa mesas[];
 	private float dinheiro;
 	private int clientes;
+	private File registro;
+	private String nomeRegistro;
 	
 	//construtor
 	public Restaurante() {
@@ -18,9 +26,57 @@ public class Restaurante {
 		}
 
 		dinheiro = 0;
+		
+		for (int i = 0; ; i++) {
+            String fileName = "log" + i + ".txt";
+            File file = new File(fileName);
+
+            if (!file.exists()) {
+                try {
+                    Formatter output = new Formatter(file);
+                    System.out.println("Arquivo criado: " + fileName);
+                    // Faça o que precisa com o arquivo aqui
+                    this.registro = file;
+                    this.nomeRegistro = "log" + i + ".txt";
+                    output.close();
+                    break; // Saia do loop quando encontrar um nome disponível
+                } catch (IOException e) {
+                    System.err.println("Erro ao criar o arquivo: " + e.getMessage());
+                }
+            }
+		}
 	}
 	
+	public void salvaLog(String mensagem) {
+		/*try {
+            Formatter formatter = new Formatter(this.file);
+            formatter.format("%s%n", registro); // Escreve a string no arquivo
+            formatter.close();
+            System.out.println("Registro gravado no arquivo.");
+        } catch (FileNotFoundException e) {
+            System.err.println("Arquivo não encontrado: " + e.getMessage());
+        }*/
+		
+		 try {
+		        FileWriter fileWriter = new FileWriter(registro, true); // Abre o arquivo em modo de anexação
+		        PrintWriter printWriter = new PrintWriter(fileWriter);
+		        printWriter.println(mensagem); // Escreve a string no arquivo seguida de uma nova linha
+		        printWriter.close();
+		        System.out.println("Registro gravado no arquivo.");
+		    } catch (IOException e) {
+		        System.err.println("Erro ao escrever no arquivo: " + e.getMessage());
+		    }
+    }
+	
 	//getters
+	public File getRegistro() {
+		return registro;
+	}
+	
+	public String getNomeRegistro() {
+		return nomeRegistro;
+	}
+	
 	public ArrayList<Pedido> getPedidos(){
 		return pedidos;
 	}
@@ -38,6 +94,7 @@ public class Restaurante {
 			return true;
 		}
 		return false;
+			
 	}
 	
 	public void entregaPedido(Pedido pedidoEntregue) {
