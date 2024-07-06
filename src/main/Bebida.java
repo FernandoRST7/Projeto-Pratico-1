@@ -38,7 +38,7 @@ public class Bebida extends Pedido {
 	
 	// Métodos
 	public String toString() {
-	    return "Bebida: " + this.nome + ", " + this.preco + " reais" + "\n" +
-	           "Mesa: " + this.getIdMesa();
+	    return "Bebida: " + this.nome + ", " + this.preco + " reais. " + "\n" +
+	           "Mesa " + (this.getIdMesa() + 1);
 	}
 }

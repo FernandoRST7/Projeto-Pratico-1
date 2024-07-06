@@ -45,7 +45,7 @@ public class Mesa {
 		}
 		
         StringBuilder sb = new StringBuilder();
-        sb.append("Pedidos da Mesa:\n");
+        sb.append("Pedidos da Mesa: \n");
         for (int i = 0; i < pedidos.size(); i++) {
             sb.append(pedidos.get(i));
             if (i < pedidos.size() - 1) {

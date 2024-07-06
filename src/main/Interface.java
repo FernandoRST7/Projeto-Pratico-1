@@ -26,19 +26,19 @@ public class Interface extends JFrame {
     	  }
     	}
     
-    class BotaoVoltar implements ActionListener{
+    class BotaoVoltar implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             cardLayout.show(mainPanel, "Menu Inicial");
         }
     }
 
-    class BotaoConfirmarId implements ActionListener{
+    class BotaoConfirmarId implements ActionListener {
         private JTextField campo;
         private Restaurante restaurante;
         private String id;
         private JPanel painel;
 
-        BotaoConfirmarId(JTextField campo, Restaurante restaurante, JPanel painel){
+        BotaoConfirmarId(JTextField campo, Restaurante restaurante, JPanel painel) {
             this.campo = campo;
             this.restaurante = restaurante;
             this.painel = painel;
@@ -53,19 +53,14 @@ public class Interface extends JFrame {
 		            
 		            if (restaurante.getMesas()[idi - 1].estaOcupada()) throw new SystemError("Mesa Ocupada");
 		            
-		            restaurante.getMesas()[idi-1].ocuparMesa(); 
+		            restaurante.getMesas()[idi - 1].ocuparMesa(); 
 		            restaurante.adicionaCliente();
-		            TextArea txt = new TextArea("Mesa " + id + " foi ocupada.");
-		            txt.setMinimumSize(new Dimension(150, 40)); // Set minimum size
-		            txt.setPreferredSize(new Dimension(150, 40)); // Set preferred size
-		            txt.setSize(new Dimension(150, 40));
-			        painel.add(txt); // aqui nao ta printando n sei pq
-			        cardLayout.show(mainPanel, "Menu Inicial");
+		            frameMensagem("Mesa " + idi + " foi ocupada.", "Confirmação");
     	        	
     	        } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
-    	        	mensagemDeErro("Digite um número de 1 a 50.");
+    	        	frameMensagem("Digite um número de 1 a 50.", "Erro");
     	        } catch (SystemError ex) {
-    	        	mensagemDeErro("Mesa já ocupada.");
+    	        	frameMensagem("Mesa já ocupada.", "Erro");
     	        }
         }
     }
@@ -107,31 +102,61 @@ public class Interface extends JFrame {
         }
     }
     
-    class BotaoCriarBebida extends JButton implements ActionListener{
+    class BotaoCriarBebida extends JButton implements ActionListener {
 
 		private static final long serialVersionUID = 1L;
 		private JTextField campoIdMesa;
         private Bebida bebida;
         private JPanel painel;
+        private Restaurante restaurante;
         
-        BotaoCriarBebida(JTextField campoIdMesa, JPanel painel) {
+        BotaoCriarBebida(JTextField campoIdMesa, JPanel painel, Restaurante restaurante) {
             this.campoIdMesa = campoIdMesa;
             this.painel = painel;
+            this.restaurante = restaurante;
         }
 
     	
 		@Override
 		public void actionPerformed(ActionEvent e) {
             int idMesa = Integer.parseInt(campoIdMesa.getText());
-            bebida = new Bebida(idMesa, this.getText());
+            bebida = new Bebida((idMesa - 1), this.getText());
             
-            TextArea txt = new TextArea("Bebida " + bebida + " foi pedida.");
-            txt.setMinimumSize(new Dimension(150, 100)); // Set minimum size
-            txt.setPreferredSize(new Dimension(150, 100)); // Set preferred size
-            txt.setSize(new Dimension(150, 100));
-	        painel.add(txt); // aqui nao ta printando n sei pq
+            if (!restaurante.addPedido(bebida)) {
+            	frameMensagem("Digite o id de uma mesa ocupada.", "Erro");
+            }
             
-	        cardLayout.show(mainPanel, "Menu Inicial");
+            else {
+                frameMensagem(bebida.getNome() + " foi pedido(a) para a mesa " + idMesa, "Confirmação");
+            }
+		}
+    	
+    }
+    
+    class BotaoVerPedidos implements ActionListener {
+    	
+		private JTextField campoIdMesa;
+        private JPanel painel;
+        private Restaurante restaurante;
+    	
+    	BotaoVerPedidos(JTextField campoIdMesa, JPanel painel, Restaurante restaurante) {
+            this.campoIdMesa = campoIdMesa;
+            this.painel = painel;
+            this.restaurante = restaurante;
+    	}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+            int idMesa = Integer.parseInt(campoIdMesa.getText());
+
+            if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) {
+            	frameMensagem("Digite o id de uma mesa ocupada.", "Erro");
+            }
+            
+            else {
+            	
+            	frameMensagem(restaurante.getMesas()[idMesa - 1].toString(), "Pedidos mesa " + idMesa);
+            }
 		}
     	
     }
@@ -153,6 +178,7 @@ public class Interface extends JFrame {
         JPanel menu2 = criarMenu2(restaurante);
         JPanel menu3 = criarMenu3(restaurante);
         JPanel menu4 = criarMenu4();
+        JPanel menu5 = criarMenu5(restaurante);
         JPanel menu6 = criarMenu6(restaurante);
         JPanel menu7 = criarMenu7(restaurante);
         JPanel menu8 = criarMenu8(restaurante);
@@ -164,7 +190,8 @@ public class Interface extends JFrame {
         mainPanel.add(menu2, "Menu 2"); //2
         mainPanel.add(menu3, "Menu 3"); //3
         mainPanel.add(menu4, "Menu 4"); //4
-        mainPanel.add(menu6, "Menu 6"); //5
+        mainPanel.add(menu5, "Menu 5"); //5
+        mainPanel.add(menu6, "Menu 6"); //6
         mainPanel.add(menu7, "Menu 7");	
         mainPanel.add(menu8, "Menu 8");
 
@@ -210,10 +237,16 @@ public class Interface extends JFrame {
                 cardLayout.show(mainPanel, "Menu 4");
             }
         });
+        
+        botaoMenu5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(mainPanel, "Menu 5");
+            }
+        });
 
         botaoMenu6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	JPanel menu6 = (JPanel) mainPanel.getComponent(4);
+            	JPanel menu6 = (JPanel) mainPanel.getComponent(6); //tem que ficar corrigindo esse valor do getComponent aqui toda a vez que alterar lá em cima
 
             	atualizaMenu6(menu6, restaurante);
                 cardLayout.show(mainPanel, "Menu 6");
@@ -243,9 +276,9 @@ public class Interface extends JFrame {
         return painel;
     }
     
-    private static void mensagemDeErro(String mensagem) {
+    private static void frameMensagem(String mensagem, String titulo) {
     	/*Abre um JFrame com a mensagem passada no argumento e um botão que quando clicado fecha o JFrame.*/
-    	JFrame errorFrame = new JFrame("Erro");
+    	JFrame errorFrame = new JFrame(titulo);
         errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close on button click or window close
         errorFrame.setMinimumSize(new Dimension(300, 100));
         errorFrame.setSize(300, 100);
@@ -346,6 +379,7 @@ public class Interface extends JFrame {
         return painel;
     }
     
+    //menu bebida
     private JPanel criarMenu3(Restaurante restaurante) {
         JPanel painel = new JPanel();
 
@@ -354,22 +388,22 @@ public class Interface extends JFrame {
         JLabel labelMesa = new JLabel("Digite o ID da mesa: ");
         JTextField campoIdMesa = new JTextField(10);
         
-        BotaoCriarBebida btnAguaListener = new BotaoCriarBebida(campoIdMesa, painel);
+        BotaoCriarBebida btnAguaListener = new BotaoCriarBebida(campoIdMesa, painel, restaurante);
         btnAguaListener.setText("Água");
         JButton btnAgua = new JButton("Água");
         btnAgua.addActionListener(btnAguaListener);
         
-        BotaoCriarBebida btnRefriListener = new BotaoCriarBebida(campoIdMesa, painel);
+        BotaoCriarBebida btnRefriListener = new BotaoCriarBebida(campoIdMesa, painel, restaurante);
         btnRefriListener.setText("Refrigerante");
         JButton btnRefri = new JButton("Refrigerante");
         btnRefri.addActionListener(btnRefriListener);
         
-        BotaoCriarBebida btnVinhoListener = new BotaoCriarBebida(campoIdMesa, painel);
+        BotaoCriarBebida btnVinhoListener = new BotaoCriarBebida(campoIdMesa, painel, restaurante);
         btnVinhoListener.setText("Vinho");
         JButton btnVinho = new JButton("Vinho");
         btnVinho.addActionListener(btnVinhoListener);
         
-        BotaoCriarBebida btnSucoListener = new BotaoCriarBebida(campoIdMesa, painel);
+        BotaoCriarBebida btnSucoListener = new BotaoCriarBebida(campoIdMesa, painel, restaurante);
         btnSucoListener.setText("Suco");
         JButton btnSuco = new JButton("Suco");
         btnSuco.addActionListener(btnSucoListener);
@@ -403,10 +437,38 @@ public class Interface extends JFrame {
         return painel;
     }
     
+    //menu ver pedidos de uma mesa
+    private JPanel criarMenu5(Restaurante restaurante) {
+    	JPanel painel = new JPanel();
+    	
+        // Campo para confirmar o id da mesa
+        JLabel labelMesa = new JLabel("Digite o ID da mesa: ");
+        JTextField campoIdMesa = new JTextField(10);
+        
+        painel.add(labelMesa);
+        painel.add(campoIdMesa);
+        
+        BotaoVerPedidos pedidosListener = new BotaoVerPedidos(campoIdMesa, painel, restaurante);
+        JButton botaoPedidos = new JButton("Ver pedidos");
+        
+        botaoPedidos.addActionListener(pedidosListener);
+        painel.add(botaoPedidos);
+    	
+        
+        // Campo para voltar para o menu inicial
+        JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+        botaoVoltar.addActionListener(new BotaoVoltar());
+        painel.add(botaoVoltar);
+        
+    	return painel;
+    }
+    
     // Método para criar o Menu 6
     private JPanel criarMenu6(Restaurante restaurante) {
     	JPanel painel = new JPanel();  	
     	JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
+    	
+    	//atualizaMenu6(painel, restaurante);
 
     	botaoVoltar.addActionListener(new BotaoVoltar());
     	painel.add(botaoVoltar);
