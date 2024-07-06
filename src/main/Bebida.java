@@ -5,11 +5,26 @@ public class Bebida extends Pedido {
 	private float preco;
 	
 	//construtor
-	public Bebida(int idMesa, String nome, float preco) {
+	public Bebida(int idMesa, String nome) {
 		super(idMesa);
 		
 		this.nome = nome;
-		this.preco = preco;
+		
+		if (nome.equals("Água")) {
+			this.preco = 3;
+		}
+		
+		else if (nome.equals("Refrigerante")) {
+			this.preco = 6;
+		}
+		
+		else if (nome.equals("Vinho")) {
+			this.preco = 30;
+		}
+		
+		else if (nome.equals("Suco")) {
+			this.preco = 8;
+		}
 	}
 	
 	//getters
