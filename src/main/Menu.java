@@ -151,22 +151,22 @@ public class Menu {
             
             input = scanner.nextLine();
             if (input.equalsIgnoreCase("1")){
-                bebida = new Bebida(id, "Suco", 8);
+                bebida = new Bebida(id, "Suco");
                 restaurante.addPedido(bebida);
             }
             
             else if (input.equalsIgnoreCase("2")){
-            	bebida = new Bebida(id, "Refrigerante", 6);
+            	bebida = new Bebida(id, "Refrigerante");
                 restaurante.addPedido(bebida);
             }
             
             else if (input.equalsIgnoreCase("3")){
-            	bebida = new Bebida(id, "Vinho", 30);
+            	bebida = new Bebida(id, "Vinho");
                 restaurante.addPedido(bebida);
             } 
             
             else if (input.equalsIgnoreCase("4")){
-            	bebida = new Bebida(id, "Água", 3);
+            	bebida = new Bebida(id, "Água");
                 restaurante.addPedido(bebida);
             }
             
