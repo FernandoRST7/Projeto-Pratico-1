@@ -3,6 +3,11 @@ package main;
 import javax.swing.*;
 
 import pizzas.Pizza;
+import pizzas.PizzaBrotinho;
+import pizzas.PizzaFamilia;
+import pizzas.PizzaGrande;
+import pizzas.PizzaMedia;
+import pizzas.Sabor;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -68,29 +73,120 @@ public class Interface extends JFrame {
         }
     }
     
-    class BotaoCriarPizza implements ActionListener {
-
+class BotaoCriarPizza implements ActionListener {
+        
         private JComboBox<String> tamanhoBox;
         private JCheckBox[] saborCheckBoxes;
         private JTextField campoIdMesa;
         private Pizza pizza;
+        private Restaurante restaurante;
 
-        BotaoCriarPizza(JComboBox<String> tamanhoBox, JCheckBox[] saborCheckBoxes, JTextField campoIdMesa) {
+        BotaoCriarPizza(JComboBox<String> tamanhoBox, JCheckBox[] saborCheckBoxes, JTextField campoIdMesa, Restaurante restaurante) {
             this.tamanhoBox = tamanhoBox;
             this.saborCheckBoxes = saborCheckBoxes;
             this.campoIdMesa = campoIdMesa;
+            this.restaurante = restaurante;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            int idMesa = Integer.parseInt(campoIdMesa.getText()); // fazer try catch aqui tb
-            int tamanho = tamanhoBox.getSelectedIndex();
-            List<String> sabores = Arrays.asList(getSelectedSabores());
-            JOptionPane.showMessageDialog(null, "id " + idMesa);
-            JOptionPane.showMessageDialog(null, "tamanho " + tamanho);
-            //pizza = new Pizza(tamanho, sabores);
-            //JOptionPane.showMessageDialog(null, "Pizza criada: " + pizza);
+            
+        	int idMesa = Integer.parseInt(campoIdMesa.getText()); // Salvo o id da mesa
+            int tamanho = tamanhoBox.getSelectedIndex(); // Salvo o tamanho da pizza
+            String[] selectedSabores = getSelectedSabores();
+            String sabores = String.join(", ", selectedSabores);    
+            JOptionPane.showMessageDialog(null, "ID: " + idMesa + ". Tamanho: " + tamanho + ". Sabores: " + sabores);    
+            String[] saboresArray = sabores.split(",\\s*"); // Salvo os sabores selecionados em uma array
+            
+            // Converte o array de strings em um ArrayList de enum Sabor
+            ArrayList<Sabor> saboresList = new ArrayList<>();
+            for (String sabor : saboresArray) {
+            	saboresList.add(Sabor.valueOf(sabor.toUpperCase()));
+            }
+            
+            
+            // Verifica se a mesa tem clientes para poder registrar um pedido
+            if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) {
+            	JOptionPane.showMessageDialog(null, "Essa mesa não está ocupada por nenhum cliente. Digite o id de uma mesa válida: ");
+            	cardLayout.show(mainPanel, "Menu Inicial");
+            	return;
+            }
+            
+            // Se for pedido uma pizza brotinho
+            if (tamanho == 0) { 
+            	PizzaBrotinho brotinho = new PizzaBrotinho(idMesa);
+            	for (Sabor sabor : saboresList) {
+                	brotinho.adicionarSabor(sabor);
+                }
+            	// Verificar se ha mais sabores adicionados que o permitido
+            	if (brotinho.getSabores().size() > 1) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+            		cardLayout.show(mainPanel, "Menu Inicial");
+                	return;
+            	}
+            	else {
+            		restaurante.addPedido(brotinho);
+            		restaurante.adicionaDinheiro(brotinho.calcularPreco());
+            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + brotinho); // Adiciona o preco ao lucro final
+            	}           
+            } 
+            
+            // Se for pedido uma pizza media
+            if (tamanho == 1) { 
+            	PizzaMedia media = new PizzaMedia(idMesa);
+            	for (Sabor sabor : saboresList) {
+                	media.adicionarSabor(sabor);
+                }
+            	// Verificar se ha mais sabores adicionados que o permitido
+            	if (media.getSabores().size() > 2) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+            		cardLayout.show(mainPanel, "Menu Inicial");
+                	return;
+            	}
+            	else {
+            		restaurante.addPedido(media);
+            		restaurante.adicionaDinheiro(media.calcularPreco());
+            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + media); // Adiciona o preco ao lucro final
+            	}           
+            } 
+            
+            // Se for pedido uma pizza grande
+            if (tamanho == 2) { 
+            	PizzaGrande grande = new PizzaGrande(idMesa);
+            	for (Sabor sabor : saboresList) {
+                	grande.adicionarSabor(sabor);
+                }
+            	// Verificar se ha mais sabores adicionados que o permitido
+            	if (grande.getSabores().size() > 3) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+            		cardLayout.show(mainPanel, "Menu Inicial");
+                	return;
+            	}
+            	else {
+            		restaurante.addPedido(grande);
+            		restaurante.adicionaDinheiro(grande.calcularPreco()); // Adiciona o preco ao lucro final
+            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + grande);
+            	}           
+            }  
+            
+            // Se for pedido uma pizza familia
+            if (tamanho == 3) { 
+            	PizzaFamilia familia = new PizzaFamilia(idMesa);
+            	for (Sabor sabor : saboresList) {
+                	familia.adicionarSabor(sabor);
+                }
+            	// Verificar se ha mais sabores adicionados que o permitido
+            	if (familia.getSabores().size() > 4) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+            		cardLayout.show(mainPanel, "Menu Inicial");
+                	return;
+            	}
+            	else {
+            		restaurante.addPedido(familia);
+            		restaurante.adicionaDinheiro(familia.calcularPreco()); // Adiciona o preco ao lucro final
+            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + familia);
+            	}           
+            }   
         }
 
         private String[] getSelectedSabores() {
@@ -346,48 +442,52 @@ public class Interface extends JFrame {
     private JPanel criarMenu2(Restaurante restaurante) {
         JPanel painel = new JPanel();
 
+        // Definição dos tamanhos e sabores disponíveis
         String[] tamanhos = {"Brotinho", "Média", "Grande", "Familia"};
-        String[] sabores = {"Calabresa", "Mussarela", "Portuguesa", "Alcaparras", "Quatro queijos"};
+        String[] sabores = {"Calabresa", "Mucarela", "Portuguesa", "Alcaparra", "Quatro_queijos"};
 
-        JComboBox<String> tamanhoBox = new JComboBox<>(tamanhos);
-        JCheckBox[] saborCheckBoxes = new JCheckBox[sabores.length];
+        // Componentes da interface
+        JComboBox<String> tamanhoBox = new JComboBox<>(tamanhos); // Dropdown para selecionar o tamanho da pizza
+        JCheckBox[] saborCheckBoxes = new JCheckBox[sabores.length]; // Checkboxes para selecionar os sabores
         for (int i = 0; i < sabores.length; i++) {
-            saborCheckBoxes[i] = new JCheckBox(sabores[i]);
+            saborCheckBoxes[i] = new JCheckBox(sabores[i]); // Criando checkboxes com os sabores disponíveis
         }
-        JButton botaoCriarPizza = new JButton("Criar Pizza");
+        JButton botaoCriarPizza = new JButton("Criar Pizza"); // Botão para criar a pizza
 
-        // Campo para confirmar o id do pedido
+        // Campo para confirmar o ID da mesa
         JLabel labelMesa = new JLabel("Digite o ID da mesa: ");
         JTextField campoIdMesa = new JTextField(10);
 
-        painel.add(labelMesa);
-        painel.add(campoIdMesa);
+        // Adicionando componentes ao painel
+        painel.add(labelMesa); // Label para informar sobre o campo de ID da mesa
+        painel.add(campoIdMesa); // Campo de texto para inserir o ID da mesa
 
-        BotaoCriarPizza botaoCriarPizzaListener = new BotaoCriarPizza(tamanhoBox, saborCheckBoxes, campoIdMesa);
-        botaoCriarPizza.addActionListener(botaoCriarPizzaListener);
+        // Instanciando o ActionListener para o botão "Criar Pizza"
+        BotaoCriarPizza botaoCriarPizzaListener = new BotaoCriarPizza(tamanhoBox, saborCheckBoxes, campoIdMesa, restaurante);
+        botaoCriarPizza.addActionListener(botaoCriarPizzaListener); // Associando o listener ao botão
 
-        painel.add(new JLabel("Selecione o tamanho:"));
-        painel.add(tamanhoBox);
-        painel.add(new JLabel("Selecione os sabores:"));
+        painel.add(new JLabel("Selecione o tamanho:")); // Label para informar sobre a seleção do tamanho da pizza
+        painel.add(tamanhoBox); // Dropdown com os tamanhos disponíveis
+        painel.add(new JLabel("Selecione os sabores:")); // Label para informar sobre a seleção dos sabores da pizza
         for (JCheckBox checkBox : saborCheckBoxes) {
-            painel.add(checkBox);
+            painel.add(checkBox); // Adicionando os checkboxes dos sabores ao painel
         }
-        painel.add(botaoCriarPizza);
+        painel.add(botaoCriarPizza); // Botão para criar a pizza
 
-        // Campo para voltar para o menu inicial
+        // Botão para voltar ao menu inicial
         JButton botaoVoltar = new JButton("Voltar ao Menu Inicial");
         botaoVoltar.addActionListener(new BotaoVoltar());
         painel.add(botaoVoltar);
 
-        // Exemplo de uso do método getPizza
+        // Exemplo de uso do método getPizza do ActionListener do botão "Criar Pizza"
         botaoCriarPizza.addActionListener(e -> {
             Pizza pizza = botaoCriarPizzaListener.getPizza();
             if (pizza != null) {
-                System.out.println("Pizza criada: " + pizza);
+                System.out.println("Pizza criada: " + pizza); // Exibe mensagem com a pizza criada
             }
         });
 
-        return painel;
+        return painel; // Retorna o painel criado para ser exibido na interface gráfica
     }
     
     // menu bebida
