@@ -30,11 +30,14 @@ public class Restaurante {
 	}
 	
 	//demais metodos
-	public void addPedido(Pedido novoPedido) {
+	public boolean addPedido(Pedido novoPedido) {
 		pedidos.add(novoPedido);
 		
-		mesas[novoPedido.getIdMesa()].addPedido(novoPedido);
-			
+		if (mesas[novoPedido.getIdMesa()].estaOcupada()) {
+			mesas[novoPedido.getIdMesa()].addPedido(novoPedido);
+			return true;
+		}
+		return false;
 	}
 	
 	public void entregaPedido(Pedido pedidoEntregue) {
