@@ -90,7 +90,10 @@ class BotaoCriarPizza implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+        	if (campoIdMesa.getText().isEmpty() || tamanhoBox.getSelectedIndex() == -1 || getSelectedSabores().length == 0) {
+        	    JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.");
+        	    return;
+        	}
         	try {
         		int idMesa = Integer.parseInt(campoIdMesa.getText()); // Salvo o id da mesa
                 int tamanho = tamanhoBox.getSelectedIndex(); // Salvo o tamanho da pizza
