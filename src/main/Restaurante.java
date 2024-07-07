@@ -48,15 +48,6 @@ public class Restaurante {
 	}
 	
 	public void salvaLog(String mensagem) {
-		/*try {
-            Formatter formatter = new Formatter(this.file);
-            formatter.format("%s%n", registro); // Escreve a string no arquivo
-            formatter.close();
-            System.out.println("Registro gravado no arquivo.");
-        } catch (FileNotFoundException e) {
-            System.err.println("Arquivo não encontrado: " + e.getMessage());
-        }*/
-		
 		 try {
 		        FileWriter fileWriter = new FileWriter(registro, true); // Abre o arquivo em modo de anexação
 		        PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -87,10 +78,10 @@ public class Restaurante {
 	
 	//demais metodos
 	public boolean addPedido(Pedido novoPedido) {
-		pedidos.add(novoPedido);
 		
 		if (mesas[novoPedido.getIdMesa()].estaOcupada()) {
 			mesas[novoPedido.getIdMesa()].addPedido(novoPedido);
+			pedidos.add(novoPedido);
 			return true;
 		}
 		return false;

@@ -16,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ArrayList;
 
 public class Interface extends JFrame {
@@ -32,7 +31,7 @@ public class Interface extends JFrame {
 		public SystemError(String message) {
     	    super(message);
     	  }
-    	}
+    }
     
     class BotaoVoltar implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -73,7 +72,7 @@ public class Interface extends JFrame {
         }
     }
     
-class BotaoCriarPizza implements ActionListener {
+    class BotaoCriarPizza implements ActionListener {
         
         private JComboBox<String> tamanhoBox;
         private JCheckBox[] saborCheckBoxes;
@@ -90,10 +89,7 @@ class BotaoCriarPizza implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        	if (campoIdMesa.getText().isEmpty() || tamanhoBox.getSelectedIndex() == -1 || getSelectedSabores().length == 0) {
-        	    JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.");
-        	    return;
-        	}
+            
         	try {
         		int idMesa = Integer.parseInt(campoIdMesa.getText()); // Salvo o id da mesa
                 int tamanho = tamanhoBox.getSelectedIndex(); // Salvo o tamanho da pizza
