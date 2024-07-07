@@ -91,102 +91,118 @@ class BotaoCriarPizza implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-        	int idMesa = Integer.parseInt(campoIdMesa.getText()); // Salvo o id da mesa
-            int tamanho = tamanhoBox.getSelectedIndex(); // Salvo o tamanho da pizza
-            String[] selectedSabores = getSelectedSabores();
-            String sabores = String.join(", ", selectedSabores);    
-            JOptionPane.showMessageDialog(null, "ID: " + idMesa + ". Tamanho: " + tamanho + ". Sabores: " + sabores);    
-            String[] saboresArray = sabores.split(",\\s*"); // Salvo os sabores selecionados em uma array
-            
-            // Converte o array de strings em um ArrayList de enum Sabor
-            ArrayList<Sabor> saboresList = new ArrayList<>();
-            for (String sabor : saboresArray) {
-            	saboresList.add(Sabor.valueOf(sabor.toUpperCase()));
-            }
-            
-            
-            // Verifica se a mesa tem clientes para poder registrar um pedido
-            if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) {
-            	JOptionPane.showMessageDialog(null, "Essa mesa não está ocupada por nenhum cliente. Digite o id de uma mesa válida: ");
-            	cardLayout.show(mainPanel, "Menu Inicial");
-            	return;
-            }
-            
-            // Se for pedido uma pizza brotinho
-            if (tamanho == 0) { 
-            	PizzaBrotinho brotinho = new PizzaBrotinho(idMesa);
-            	for (Sabor sabor : saboresList) {
-                	brotinho.adicionarSabor(sabor);
+        	try {
+        		int idMesa = Integer.parseInt(campoIdMesa.getText()); // Salvo o id da mesa
+                int tamanho = tamanhoBox.getSelectedIndex(); // Salvo o tamanho da pizza
+                String[] selectedSabores = getSelectedSabores();
+                String sabores = String.join(", ", selectedSabores);    
+                String[] saboresArray = sabores.split(",\\s*"); // Salvo os sabores selecionados em uma array
+                
+                // Converte o array de strings em um ArrayList de enum Sabor
+                ArrayList<Sabor> saboresList = new ArrayList<>();
+                for (String sabor : saboresArray) {
+                	saboresList.add(Sabor.valueOf(sabor.toUpperCase()));
                 }
-            	// Verificar se ha mais sabores adicionados que o permitido
-            	if (brotinho.getSabores().size() > 1) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
-            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
-            		cardLayout.show(mainPanel, "Menu Inicial");
-                	return;
-            	}
-            	else {
-            		restaurante.addPedido(brotinho);
-            		restaurante.adicionaDinheiro(brotinho.calcularPreco());
-            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + brotinho); // Adiciona o preco ao lucro final
-            	}           
-            } 
-            
-            // Se for pedido uma pizza media
-            if (tamanho == 1) { 
-            	PizzaMedia media = new PizzaMedia(idMesa);
-            	for (Sabor sabor : saboresList) {
-                	media.adicionarSabor(sabor);
+                
+                
+                // Verifica se a mesa tem clientes para poder registrar um pedido
+                if (!restaurante.getMesas()[idMesa - 1].estaOcupada())  {
+                	JOptionPane.showMessageDialog(null, "Essa mesa não está ocupada por nenhum cliente. Digite o id de uma mesa válida.");
+                	cardLayout.show(mainPanel, "Menu Inicial");
+                	throw new SystemError("Mesa desocupada.");
                 }
-            	// Verificar se ha mais sabores adicionados que o permitido
-            	if (media.getSabores().size() > 2) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
-            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
-            		cardLayout.show(mainPanel, "Menu Inicial");
-                	return;
-            	}
-            	else {
-            		restaurante.addPedido(media);
-            		restaurante.adicionaDinheiro(media.calcularPreco());
-            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + media); // Adiciona o preco ao lucro final
-            	}           
-            } 
-            
-            // Se for pedido uma pizza grande
-            if (tamanho == 2) { 
-            	PizzaGrande grande = new PizzaGrande(idMesa);
-            	for (Sabor sabor : saboresList) {
-                	grande.adicionarSabor(sabor);
-                }
-            	// Verificar se ha mais sabores adicionados que o permitido
-            	if (grande.getSabores().size() > 3) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
-            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
-            		cardLayout.show(mainPanel, "Menu Inicial");
-                	return;
-            	}
-            	else {
-            		restaurante.addPedido(grande);
-            		restaurante.adicionaDinheiro(grande.calcularPreco()); // Adiciona o preco ao lucro final
-            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + grande);
-            	}           
-            }  
-            
-            // Se for pedido uma pizza familia
-            if (tamanho == 3) { 
-            	PizzaFamilia familia = new PizzaFamilia(idMesa);
-            	for (Sabor sabor : saboresList) {
-                	familia.adicionarSabor(sabor);
-                }
-            	// Verificar se ha mais sabores adicionados que o permitido
-            	if (familia.getSabores().size() > 4) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
-            		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
-            		cardLayout.show(mainPanel, "Menu Inicial");
-                	return;
-            	}
-            	else {
-            		restaurante.addPedido(familia);
-            		restaurante.adicionaDinheiro(familia.calcularPreco()); // Adiciona o preco ao lucro final
-            		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + familia);
-            	}           
-            }   
+                
+                // Se for pedido uma pizza brotinho
+                if (tamanho == 0) { 
+                	PizzaBrotinho brotinho = new PizzaBrotinho(idMesa);
+                	for (Sabor sabor : saboresList) {
+                    	brotinho.adicionarSabor(sabor);
+                    }
+                	// Verificar se ha mais sabores adicionados que o permitido
+                	if (brotinho.getSabores().size() > 1) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+                		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+                		cardLayout.show(mainPanel, "Menu Inicial");
+                		throw new SystemError("Mais sabores adicionados que o permitido.");
+                	}
+                	else {
+                		restaurante.addPedido(brotinho);
+                		restaurante.getMesas()[idMesa - 1].addPedido(brotinho);
+                		restaurante.adicionaDinheiro(brotinho.calcularPreco());
+                		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + brotinho); // Adiciona o preco ao lucro final
+                		restaurante.salvaLog("Mesa" + idMesa + " pediu uma pizza brotinho: " + brotinho.getSabores() + ", R$: " + brotinho.calcularPreco());
+                	}           
+                } 
+                
+                // Se for pedido uma pizza media
+                if (tamanho == 1) { 
+                	PizzaMedia media = new PizzaMedia(idMesa);
+                	for (Sabor sabor : saboresList) {
+                    	media.adicionarSabor(sabor);
+                    }
+                	// Verificar se ha mais sabores adicionados que o permitido
+                	if (media.getSabores().size() > 2) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+                		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+                		cardLayout.show(mainPanel, "Menu Inicial");
+                		throw new SystemError("Mais sabores adicionados que o permitido.");
+                	}
+                	else {
+                		restaurante.addPedido(media);
+                		restaurante.getMesas()[idMesa - 1].addPedido(media);
+                		restaurante.adicionaDinheiro(media.calcularPreco());
+                		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + media); // Adiciona o preco ao lucro final
+                		restaurante.salvaLog("Mesa" + idMesa + " pediu uma pizza media: " + media.getSabores() + ", R$: " + media.calcularPreco());
+                	}           
+                } 
+                
+                // Se for pedido uma pizza grande
+                if (tamanho == 2) { 
+                	PizzaGrande grande = new PizzaGrande(idMesa);
+                	for (Sabor sabor : saboresList) {
+                    	grande.adicionarSabor(sabor);
+                    }
+                	// Verificar se ha mais sabores adicionados que o permitido
+                	if (grande.getSabores().size() > 3) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+                		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+                		cardLayout.show(mainPanel, "Menu Inicial");
+                		throw new SystemError("Mais sabores adicionados que o permitido.");
+                	}
+                	else {
+                		restaurante.addPedido(grande);
+                		restaurante.getMesas()[idMesa - 1].addPedido(grande);
+                		restaurante.adicionaDinheiro(grande.calcularPreco()); // Adiciona o preco ao lucro final
+                		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + grande);
+                		restaurante.salvaLog("Mesa" + idMesa + " pediu uma pizza grande: " + grande.getSabores() + ", R$: " + grande.calcularPreco());
+                	}           
+                }  
+                
+                // Se for pedido uma pizza familia
+                if (tamanho == 3) { 
+                	PizzaFamilia familia = new PizzaFamilia(idMesa);
+                	for (Sabor sabor : saboresList) {
+                    	familia.adicionarSabor(sabor);
+                    }
+                	// Verificar se ha mais sabores adicionados que o permitido
+                	if (familia.getSabores().size() > 4) { // Se houver mais sabores que o permitido, a operacao eh cancelada e volta pro menu inicial
+                		JOptionPane.showMessageDialog(null, "Mais sabores adicionados que o permitido.");
+                		cardLayout.show(mainPanel, "Menu Inicial");
+                		throw new SystemError("Mais sabores adicionados que o permitido.");
+                	}
+                	else {
+                		restaurante.addPedido(familia);
+                		restaurante.getMesas()[idMesa - 1].addPedido(familia);
+                		restaurante.adicionaDinheiro(familia.calcularPreco()); // Adiciona o preco ao lucro final
+                		JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso: " + familia);
+                		restaurante.salvaLog("Mesa" + idMesa + " pediu uma pizza familia: " + familia.getSabores() + ", R$: " + familia.calcularPreco());
+                	}           
+                }   
+        	}
+        	catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+        		frameMensagem("Digite um número de 1 a 50.", "Erro");
+        	}
+        	catch (SystemError ex){
+        		frameMensagem("Nao foi possivel pedir a pizza", "Erro");
+        	}
+        	
         }
 
         private String[] getSelectedSabores() {
@@ -255,7 +271,6 @@ class BotaoCriarPizza implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
             try{
                 int idMesa = Integer.parseInt(campoIdMesa.getText());
-    
                 if (!restaurante.getMesas()[idMesa - 1].estaOcupada()) throw new SystemError("Mesa desocupada.");
                 else {
                     frameMensagem(restaurante.getMesas()[idMesa - 1].toString(), "Pedidos mesa " + idMesa);
