@@ -8,7 +8,7 @@ Orientada a Objetos (MC322). O sistema permite que o usuário (garçom ou gerent
 exemplo), organize os pedidos de cada mesa em uma pizzaria; a ideia é facilitar a visualização
 do estado atual da lotação do restaurante e acompanhar as pizzas e as bebidas pedidas pelos
 clientes.
-    O código tem uma classe Interface, que é responsável por receber as entradas do usuário e
+    O código tem uma classe Menu, que é responsável por receber as entradas do usuário e
 imprimir na tela as informações que ele deseja acessar. Dentro dessa classe, funções como
 registra_pizza, registra_bebida e monta_pizza permitem que o garçom passe para o sistema
 qual o pedido de uma certa mesa do restaurante. Como todas as mesas e todos os pedidos são
