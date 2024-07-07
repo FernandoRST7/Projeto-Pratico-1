@@ -10,14 +10,19 @@ public class PizzaGrande extends Pizza {
 
 	// Métodos
 	public float calcularPreco() {
-		int preco = 0;
-		//cobra pelo sabor mais caro $$
-		for (int i = 0; i < sabores.size(); i++) {
-			if(sabores.get(i).preco > preco) {
-				preco = sabores.get(i).preco;
-			}
-		}
-		return preco;
+		float preco = 0;
+
+	    // Encontra o sabor mais caro
+	    for (Sabor sabor : sabores) {
+	        if (sabor.getPreco() > preco) {
+	            preco = sabor.getPreco();
+	        }
+	    }
+
+	    // Multiplica o preço encontrado por 3
+	    preco = preco * 3;
+
+	    return preco;
 	}
 	
 	public String toString() {
