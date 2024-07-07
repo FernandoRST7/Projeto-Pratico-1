@@ -693,8 +693,4 @@ public class Interface extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        Restaurante restaurante = new Restaurante();
-        new Interface(restaurante);
-    }
 }
